@@ -1,0 +1,391 @@
+{% extends 'products/base.html' %}
+
+{% block title %}Alt Parça Yönetimi{% endblock %}
+
+{% block page_title %}Alt Parça Yönetimi{% endblock %}
+
+{% block content %}
+<div class="flex justify-end mb-5">
+    <div class="flex gap-2">
+        <a href="{% url 'urun_ekle' %}"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg shadow transition-colors flex items-center decoration-0">
+            Ana Parçalar
+        </a>
+        <button
+            class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg shadow transition-colors flex items-center"
+            onclick="toggleForm()">
+            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Yeni Alt Parça Ekle
+        </button>
+    </div>
+</div>
+
+<div id="main-container"
+    class="flex flex-col lg:flex-row h-[calc(100vh-180px)] overflow-hidden border border-gray-200 rounded-lg shadow-sm bg-white transition-all duration-300">
+    <!-- Left: List -->
+    <div id="list-panel"
+        class="product-list-panel w-full lg:w-2/3 overflow-y-auto p-6 border-r border-gray-200 bg-gray-50/50 transition-all duration-300">
+
+        <!-- Form Container -->
+        <div id="form-container" class="hidden bg-white p-6 rounded-xl shadow-md border border-gray-100 mb-6">
+            <h3 id="form-title" class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Yeni Alt Parça</h3>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="subpart_id" id="subpart_id">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Malzeme Kodu</label>
+                        <input type="text" name="material_code" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Malzeme Adı</label>
+                        <input type="text" name="material_name" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Ağırlık</label>
+                        <input type="number" step="0.001" name="weight" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Kalite</label>
+                        <input type="text" name="quality" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                    </div>
+                    <div class="md:col-span-2 flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Açıklama</label>
+                        <textarea name="description"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow min-h-[80px]"></textarea>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Kalite Belgesi (PDF/Resim)</label>
+                        <input type="file" name="quality_doc" accept=".pdf, .png, .jpg, .jpeg"
+                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-colors">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Görsel Dosya (PDF/Resim)</label>
+                        <input type="file" name="visual_doc" accept=".pdf, .png, .jpg, .jpeg"
+                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-colors">
+                    </div>
+                </div>
+                <hr class="my-4 border-gray-200">
+
+                <!-- Material Section -->
+                <div class="mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-sm font-semibold text-gray-700">Kullanılan Malzemeler</label>
+                        <button type="button" onclick="addMaterialRow()"
+                            class="text-xs bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-3 py-1.5 rounded-md font-medium transition-colors">
+                            + Malzeme Ekle
+                        </button>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-gray-100 text-gray-600 font-semibold border-b border-gray-200">
+                                <tr>
+                                    <th class="p-2">Malzeme</th>
+                                    <th class="p-2 w-20">Birim</th>
+                                    <th class="p-2 w-20">Miktar</th>
+                                    <th class="p-2 w-24">Fireli Ağ.</th>
+                                    <th class="p-2 w-24">Net Ağ.</th>
+                                    <th class="p-2 w-24">Galv. Ağ.</th>
+                                    <th class="p-2 w-24">Top. Ağ.</th>
+                                    <th class="p-2 w-24">Birim Fiyat</th>
+                                    <th class="p-2 w-10"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="materials-table-body" class="divide-y divide-gray-100">
+                                <!-- Dynamic Rows -->
+                            </tbody>
+                        </table>
+                        <div id="no-materials-msg" class="p-4 text-center text-gray-400 text-sm">Henüz malzeme
+                            eklenmedi.</div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
+                    <button type="button"
+                        class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                        onclick="toggleForm()">İptal</button>
+                    <button type="submit" id="save-btn"
+                        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md shadow transition-colors font-medium">Kaydet</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="space-y-4">
+            {% for subpart in subparts %}
+            <div class="product-card group bg-white rounded-xl p-5 shadow-sm border border-gray-200 hover:shadow-md hover:border-indigo-300 transition-all cursor-pointer relative"
+                onclick="showPreview('{% if subpart.visual_doc %}{{ subpart.visual_doc.url }}{% endif %}', this, 'visual')">
+
+                <div class="flex justify-between items-start mb-3">
+                    <div class="font-bold text-lg text-gray-800">{{ subpart.material_name }}</div>
+                    <div class="text-xs font-bold text-indigo-700 bg-indigo-100 px-2 py-1 rounded-full">MALZEME KODU :
+                        {{ subpart.material_code }}</div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-sm text-gray-600 mb-3">
+                    <p><span class="font-semibold text-gray-800">Ağırlık:</span> {{ subpart.weight }}</p>
+                    <p><span class="font-semibold text-gray-800">Kalite:</span> {{ subpart.quality }}</p>
+                    <p class="col-span-2 text-xs text-gray-500 mt-1 line-clamp-2">
+                        <span class="font-semibold text-gray-700">Açıklama:</span> {{
+                        subpart.description|truncatechars:50 }}
+                    </p>
+                </div>
+
+                <div class="flex gap-2">
+                    {% if subpart.quality_doc %}
+                    <button
+                        class="text-xs px-2 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors"
+                        onclick="event.stopPropagation(); showPreview('{{ subpart.quality_doc.url }}', this.closest('.product-card'), 'quality')">
+                        Kalite Belgesi
+                    </button>
+                    {% endif %}
+                    {% if subpart.visual_doc %}
+                    <button
+                        class="text-xs px-2 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors"
+                        onclick="event.stopPropagation(); showPreview('{{ subpart.visual_doc.url }}', this.closest('.product-card'), 'visual')">
+                        Görsel
+                    </button>
+                    {% endif %}
+                </div>
+
+                <div class="absolute bottom-3 right-3 flex gap-1 z-[5] opacity-0 group-hover:opacity-100 transition-opacity"
+                    onclick="event.stopPropagation()">
+                    <button
+                        class="w-8 h-8 flex justify-center items-center bg-gray-50 hover:bg-white text-gray-500 hover:text-indigo-600 border border-gray-200 hover:border-indigo-600 rounded transition-all"
+                        title="Düzenle"
+                        onclick="editSubpart('{{ subpart.id }}', '{{ subpart.material_code }}', '{{ subpart.material_name }}', '{{ subpart.weight }}', '{{ subpart.quality }}', '{{ subpart.description|escapejs }}', '{{ subpart.materials_json|escapejs }}')">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                    </button>
+                    <form action="{% url 'delete_subpart' subpart.id %}" method="POST" class="inline"
+                        onsubmit="return confirm('Silmek istediğinize emin misiniz?');">
+                        {% csrf_token %}
+                        <button type="submit"
+                            class="w-8 h-8 flex justify-center items-center bg-gray-50 hover:bg-white text-gray-500 hover:text-red-500 border border-gray-200 hover:border-red-500 rounded transition-all"
+                            title="Sil">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center text-gray-500 py-8 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+                <svg class="w-12 h-12 mx-auto text-gray-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+                    </path>
+                </svg>
+                <p>Alt parça bulunamadı.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Right: Preview -->
+    <div id="preview-panel"
+        class="preview-panel w-full lg:w-1/3 bg-slate-200 flex justify-center items-center relative p-6 overflow-hidden transition-all duration-300">
+        <!-- Maximize/Minimize Button -->
+        <button onclick="togglePreview()" title="Genişlet/Küçült"
+            class="absolute top-4 right-4 z-10 bg-white/80 hover:bg-white text-gray-600 hover:text-indigo-600 p-2 rounded-full shadow-md backdrop-blur-sm transition-all border border-gray-200">
+            <svg id="expand-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+            </svg>
+            <svg id="collapse-icon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <div id="empty-state" class="text-center text-gray-500">
+            <svg class="w-16 h-16 mx-auto text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                </path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-700">Önizleme</h3>
+            <p class="text-sm">Dosyayı görüntülemek için listeden bir dosya seçin.</p>
+        </div>
+        <iframe id="pdf-viewer" src="" class="hidden w-full h-full border-0 bg-white rounded-lg shadow-lg"></iframe>
+        <img id="img-viewer" src=""
+            class="hidden max-w-full max-h-full rounded-lg shadow-lg object-contain cursor-zoom-in transition-transform duration-100 ease-out">
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Pass Stock Items to JS
+    // Pass Stock Items to JS
+    const STOCK_ITEMS = JSON.parse('{{ stock_items_json|escapejs }}');
+
+    function togglePreview() {
+        const listPanel = document.getElementById('list-panel');
+        const previewPanel = document.getElementById('preview-panel');
+        const expandIcon = document.getElementById('expand-icon');
+        const collapseIcon = document.getElementById('collapse-icon');
+
+        // Check if currently expanded (list hidden or width 0)
+        const isExpanded = listPanel.classList.contains('lg:w-0') || listPanel.classList.contains('hidden');
+
+        if (isExpanded) {
+            // Restore to default (Collapsing preview)
+            listPanel.classList.remove('hidden', 'lg:w-0', 'p-0', 'w-0');
+            listPanel.classList.add('w-full', 'lg:w-2/3', 'p-6', 'border-r');
+
+            previewPanel.classList.remove('w-full', 'lg:w-full');
+            previewPanel.classList.add('w-full', 'lg:w-1/3');
+
+            expandIcon.classList.remove('hidden');
+            collapseIcon.classList.add('hidden');
+        } else {
+            // Maximize Preview
+            listPanel.classList.remove('w-full', 'lg:w-2/3', 'p-6', 'border-r');
+            listPanel.classList.add('hidden', 'lg:w-0', 'p-0', 'w-0');
+
+            previewPanel.classList.remove('w-full', 'lg:w-1/3');
+            previewPanel.classList.add('w-full', 'lg:w-full');
+
+            expandIcon.classList.add('hidden');
+            collapseIcon.classList.remove('hidden');
+        }
+    }
+
+    function toggleForm() {
+        const form = document.getElementById('form-container');
+        if (form.classList.contains('hidden')) {
+            form.classList.remove('hidden');
+            resetForm();
+        } else {
+            form.classList.add('hidden');
+        }
+    }
+
+    function resetForm() {
+        document.getElementById('subpart_id').value = '';
+        document.getElementById('form-title').innerText = 'Yeni Alt Parça';
+        document.getElementById('save-btn').innerText = 'Kaydet';
+        document.querySelector('form').reset();
+
+        // Reset Materials
+        document.getElementById('materials-table-body').innerHTML = '';
+        document.getElementById('no-materials-msg').classList.remove('hidden');
+    }
+
+    function editSubpart(id, code, name, weight, quality, description, materialsJson) {
+        const formContainer = document.getElementById('form-container');
+        formContainer.classList.remove('hidden');
+
+        document.getElementById('subpart_id').value = id;
+        document.querySelector('input[name="material_code"]').value = code;
+        document.querySelector('input[name="material_name"]').value = name;
+        document.querySelector('input[name="weight"]').value = weight.replace(',', '.');
+        document.querySelector('input[name="quality"]').value = quality;
+        document.querySelector('textarea[name="description"]').value = description;
+
+        document.getElementById('form-title').innerText = 'Alt Parça Düzenle';
+        document.getElementById('save-btn').innerText = 'Güncelle';
+
+        // Load Materials
+        document.getElementById('materials-table-body').innerHTML = '';
+        const materials = JSON.parse(materialsJson || '[]');
+        if (materials.length > 0) {
+            document.getElementById('no-materials-msg').classList.add('hidden');
+            materials.forEach(mat => addMaterialRow(mat));
+        } else {
+            document.getElementById('no-materials-msg').classList.remove('hidden');
+        }
+
+        document.querySelector('.product-list-panel').scrollTop = 0;
+    }
+
+    function addMaterialRow(data = null) {
+        const tbody = document.getElementById('materials-table-body');
+        document.getElementById('no-materials-msg').classList.add('hidden');
+
+        const tr = document.createElement('tr');
+        tr.className = "bg-white border-b border-gray-50 hover:bg-gray-50/50 transition-colors";
+
+        // Stock Options
+        let options = '<option value="">Seçiniz</option>';
+        STOCK_ITEMS.forEach(item => {
+            const selected = data && data.stock_id == item.id ? 'selected' : '';
+            options += `<option value="${item.id}" ${selected}>${item.name}</option>`;
+        });
+
+        const units = ['Adet', 'Metre', 'Metrekare', 'Kg'];
+        let unitOptions = '';
+        units.forEach(u => {
+            const selected = data && data.unit == u ? 'selected' : '';
+            unitOptions += `<option value="${u}" ${selected}>${u}</option>`;
+        });
+
+        tr.innerHTML = `
+            <td class="p-1">
+                <select name="material_stock_ids[]" class="w-full text-xs border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500 py-1">
+                    ${options}
+                </select>
+            </td>
+            <td class="p-1">
+                <select name="material_units[]" class="w-full text-xs border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500 py-1">
+                    ${unitOptions}
+                </select>
+            </td>
+            <td class="p-1"><input type="number" step="0.0000000001" name="material_amounts[]" value="${data ? data.amount : ''}" class="w-full text-xs border-gray-300 rounded py-1" placeholder="0"></td>
+            <td class="p-1"><input type="number" step="0.001" name="material_fireli[]" value="${data ? data.fireli : ''}" class="w-full text-xs border-gray-300 rounded py-1" placeholder="0"></td>
+            <td class="p-1"><input type="number" step="0.001" name="material_net[]" value="${data ? data.net : ''}" class="w-full text-xs border-gray-300 rounded py-1" placeholder="0"></td>
+            <td class="p-1"><input type="number" step="0.001" name="material_galvanized[]" value="${data ? data.galvanized : ''}" class="w-full text-xs border-gray-300 rounded py-1" placeholder="0"></td>
+            <td class="p-1"><input type="number" step="0.001" name="material_total[]" value="${data ? data.total : ''}" class="w-full text-xs border-gray-300 rounded py-1" placeholder="0"></td>
+            <td class="p-1"><input type="number" step="0.0001" name="material_price[]" value="${data ? data.price : ''}" class="w-full text-xs border-gray-300 rounded py-1" placeholder="0"></td>
+            <td class="p-1 text-center">
+                <button type="button" onclick="this.closest('tr').remove()" class="text-red-500 hover:text-red-700">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    function showPreview(url, cardElement, type) {
+        document.querySelectorAll('.product-card').forEach(c => c.classList.remove('ring-2', 'ring-indigo-500', 'bg-indigo-50'));
+        if (cardElement) cardElement.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-50');
+
+        const pdfViewer = document.getElementById('pdf-viewer');
+        const imgViewer = document.getElementById('img-viewer');
+        const emptyState = document.getElementById('empty-state');
+
+        pdfViewer.classList.add('hidden');
+        imgViewer.classList.add('hidden');
+        emptyState.classList.add('hidden');
+
+        if (url) {
+            const extension = url.split('.').pop().toLowerCase();
+            if (extension === 'pdf') {
+                pdfViewer.src = url;
+                pdfViewer.classList.remove('hidden');
+            } else if (['png', 'jpg', 'jpeg'].includes(extension)) {
+                imgViewer.src = url;
+                imgViewer.classList.remove('hidden');
+            } else {
+                emptyState.classList.remove('hidden');
+                emptyState.querySelector('p').innerHTML = `Önizleme desteklenmiyor. <a href="${url}" target="_blank" class="text-indigo-600 underline">Dosyayı İndir</a>`;
+            }
+        } else {
+            emptyState.classList.remove('hidden');
+            emptyState.querySelector('p').textContent = "Bu dosya mevcut değil.";
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Satış Teklifi - {{ offer.offer_number }}</title>
+    {% load static %}
+    <link href="{% static 'css/pdf_styles.css' %}" rel="stylesheet">
+
+    {{ pdf_style_block|safe }}
+
+</head>
+
+<body>
+
+    <!-- Header -->
+    <table class="header-table">
+        <tr>
+            <td class="company-info">
+                <h1>{{ offer.company_name }}</h1>
+                <p>
+                    {{ offer.company_address|linebreaksbr }}<br>
+                    <strong>{% if offer.language == 'EN' %}Tax Office:{% else %}Vergi Dairesi:{% endif %}</strong> {{
+                    offer.company_tax_office }}<br>
+                    <strong>{% if offer.language == 'EN' %}Tax No:{% else %}Vergi No:{% endif %}</strong> {{
+                    offer.company_tax_number }}
+                </p>
+            </td>
+            <td class="offer-meta">
+                <h2>{% if offer.language == 'EN' %}SALES OFFER{% else %}SATIŞ TEKLİFİ{% endif %}</h2>
+                <p>
+                    <strong>{% if offer.language == 'EN' %}Date:{% else %}Tarih:{% endif %}</strong> {{
+                    offer.offer_date|date:"d.m.Y" }}<br>
+                    <strong>{% if offer.language == 'EN' %}Offer No:{% else %}Teklif No:{% endif %}</strong> {{
+                    offer.offer_number }}<br>
+                    <strong>{% if offer.language == 'EN' %}Revision:{% else %}Revizyon:{% endif %}</strong> {{
+                    offer.revision_number }}
+                </p>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Customer -->
+    <div class="customer-section">
+        <h3>{% if offer.language == 'EN' %}To:{% else %}Sayın Yetkili,{% endif %}</h3>
+        <p><strong>{% if offer.language == 'EN' %}Company/Customer:{% else %}Firma/Müşteri:{% endif %}</strong> {{
+            offer.customer.name }}</p>
+        {% if offer.customer.address %}<p>{{ offer.customer.address }}</p>{% endif %}
+        {% if offer.customer.tax_number %}<p>{% if offer.language == 'EN' %}Tax No:{% else %}Vergi No:{% endif %} {{
+            offer.customer.tax_number }}</p>{% endif %}
+    </div>
+
+    <!-- Items -->
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th style="width: 5%;">#</th>
+                <th style="width: 50%;">{% if offer.language == 'EN' %}Product / Service{% else %}Ürün / Hizmet{% endif
+                    %}</th>
+                <th style="width: 10%;" class="text-center">{% if offer.language == 'EN' %}Quantity{% else %}Miktar{%
+                    endif %}</th>
+                <th style="width: 15%;" class="text-right">{% if offer.language == 'EN' %}Unit Price{% else %}Birim
+                    Fiyat{% endif %}</th>
+                <th style="width: 20%;" class="text-right">{% if offer.language == 'EN' %}Total{% else %}Toplam{% endif
+                    %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in offer.items.all %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>
+                    {% if item.product %}
+                    <strong>{{ item.product.material_name }}</strong>
+                    {% elif item.subpart %}
+                    <strong>{{ item.subpart.material_name }}</strong> ({% if offer.language == 'EN' %}Sub-Part{% else
+                    %}Alt Parça{% endif %})
+                    {% else %}
+                    {{ item.product_name }}
+                    {% endif %}
+                </td>
+                <td class="text-center">{{ item.quantity }}</td>
+                <td class="text-right">{{ item.unit_price }} {{ offer.currency }}</td>
+                <td class="text-right">{{ item.total_price }} {{ offer.currency }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="4" class="text-right font-bold">{% if offer.language == 'EN' %}GRAND TOTAL{% else %}GENEL
+                    TOPLAM{% endif %}</td>
+                <td class="text-right font-bold">{{ offer.total_amount }} {{ offer.currency }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Delivery & Terms -->
+    <div class="terms-section">
+        <p><strong>{% if offer.language == 'EN' %}Delivery Place:{% else %}Teslim Yeri:{% endif %}</strong> {{
+            offer.delivery_place|default:"-" }}</p>
+        <p><strong>{% if offer.language == 'EN' %}Delivery Date:{% else %}Teslim Tarihi:{% endif %}</strong> {{
+            offer.delivery_date|default:"-" }}</p>
+        <p><strong>{% if offer.language == 'EN' %}Validity Date:{% else %}Geçerlilik Tarihi:{% endif %}</strong> {{
+            offer.validity_date|default:"-" }}</p>
+
+        {% if offer.terms %}
+        <h4>{% if offer.language == 'EN' %}Terms & Conditions:{% else %}Anlaşma Şartları:{% endif %}</h4>
+        <p>{{ offer.terms|linebreaksbr }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Bank Info -->
+    {% if offer.bank_iban %}
+    <div class="bank-section">
+        <h4>{% if offer.language == 'EN' %}Bank Details{% else %}Banka Bilgileri{% endif %}</h4>
+        <p>
+            <strong>{% if offer.language == 'EN' %}Bank:{% else %}Banka:{% endif %}</strong> {{ offer.bank_name }} / {{
+            offer.bank_branch }}<br>
+            <strong>{% if offer.language == 'EN' %}Recipient:{% else %}Alıcı:{% endif %}</strong> {{
+            offer.bank_recipient }}<br>
+            <strong>IBAN:</strong> {{ offer.bank_iban }}<br>
+            {% if offer.bank_swift %}<strong>SWIFT:</strong> {{ offer.bank_swift }}{% endif %}
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Footer / Signatures -->
+    <div id="footerContent">
+        <table style="width: 100%; margin-top: 30px;">
+            <tr>
+                <td style="width: 50%; text-align: center;">
+                    <p><strong>{{ offer.company_name }}</strong></p>
+                    <br><br><br>
+                    <p>Kaşe / İmza</p>
+                </td>
+                <td style="width: 50%; text-align: center;">
+                    <p><strong>{{ offer.customer.name }}</strong></p>
+                    <br><br><br>
+                    <p>Kaşe / İmza</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+
+</html>

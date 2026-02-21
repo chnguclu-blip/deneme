@@ -1,0 +1,830 @@
+{% extends 'products/base.html' %}
+
+{% block title %}Stok Takip{% endblock %}
+
+{% block page_title %}Stok Takip Listesi{% endblock %}
+
+{% block content %}
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+    <!-- Category Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 w-full md:w-auto flex-1">
+        <div onclick="filterStock('HAM MADDE')"
+            class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition-all border-l-4 border-l-blue-500 relative group">
+            <div class="text-xs text-gray-500 font-semibold">HAM MADDE</div>
+            <div class="text-xl font-bold text-gray-800">{{ counts.HAM_MADDE|default:0 }}</div>
+            <div class="absolute bottom-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="event.stopPropagation(); toggleForm('HAM MADDE')"
+                    class="p-1 bg-indigo-100 text-indigo-600 rounded hover:bg-indigo-200" title="Ekle">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+                <button onclick="event.stopPropagation(); filterStock('HAM MADDE')"
+                    class="p-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200" title="Düzenle/Listele">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div onclick="filterStock('YARI MAMUL')"
+            class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition-all border-l-4 border-l-orange-500 relative group">
+            <div class="text-xs text-gray-500 font-semibold">YARI MAMUL</div>
+            <div class="text-xl font-bold text-gray-800">{{ counts.YARI_MAMUL|default:0 }}</div>
+            <div class="absolute bottom-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="event.stopPropagation(); toggleForm('YARI MAMUL')"
+                    class="p-1 bg-indigo-100 text-indigo-600 rounded hover:bg-indigo-200" title="Ekle">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+                <button onclick="event.stopPropagation(); filterStock('YARI MAMUL')"
+                    class="p-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200" title="Düzenle/Listele">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div onclick="filterStock('MAMUL')"
+            class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition-all border-l-4 border-l-green-500 relative group">
+            <div class="text-xs text-gray-500 font-semibold">MAMUL</div>
+            <div class="text-xl font-bold text-gray-800">{{ counts.MAMUL|default:0 }}</div>
+            <div class="absolute bottom-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="event.stopPropagation(); toggleForm('MAMUL')"
+                    class="p-1 bg-indigo-100 text-indigo-600 rounded hover:bg-indigo-200" title="Ekle">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+                <button onclick="event.stopPropagation(); filterStock('MAMUL')"
+                    class="p-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200" title="Düzenle/Listele">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div onclick="filterStock('SARF MALZEME')"
+            class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition-all border-l-4 border-l-gray-500 relative group">
+            <div class="text-xs text-gray-500 font-semibold">SARF MALZEME</div>
+            <div class="text-xl font-bold text-gray-800">{{ counts.SARF_MALZEME|default:0 }}</div>
+            <div class="absolute bottom-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="event.stopPropagation(); toggleForm('SARF MALZEME')"
+                    class="p-1 bg-indigo-100 text-indigo-600 rounded hover:bg-indigo-200" title="Ekle">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+                <button onclick="event.stopPropagation(); filterStock('SARF MALZEME')"
+                    class="p-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200" title="Düzenle/Listele">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div onclick="filterStock('HIRDAVAT')"
+            class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition-all border-l-4 border-l-purple-500 relative group">
+            <div class="text-xs text-gray-500 font-semibold">HIRDAVAT</div>
+            <div class="text-xl font-bold text-gray-800">{{ counts.HIRDAVAT|default:0 }}</div>
+            <div class="absolute bottom-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="event.stopPropagation(); toggleForm('HIRDAVAT')"
+                    class="p-1 bg-indigo-100 text-indigo-600 rounded hover:bg-indigo-200" title="Ekle">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+                <button onclick="event.stopPropagation(); filterStock('HIRDAVAT')"
+                    class="p-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200" title="Düzenle/Listele">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sub-Category Cards Container (Initially Hidden) -->
+<!-- HAM MADDE Sub-categories -->
+<div id="sub-cat-container-HAM-MADDE" class="hidden mb-6 animate-fade-in-down sub-cat-container">
+    <div class="flex items-center gap-2 mb-3">
+        <div class="h-px bg-gray-200 flex-1"></div>
+        <span class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Ham Madde Alt Kategorileri</span>
+        <div class="h-px bg-gray-200 flex-1"></div>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+        <!-- BORU -->
+        <div onclick="filterStock('HAM MADDE', 'BORU')"
+            class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition-all border-l-4 border-l-blue-400 relative group">
+            <div class="text-xs text-gray-500 font-semibold">BORU</div>
+            <div class="text-xl font-bold text-gray-800">{{ sub_counts.BORU|default:0 }}</div>
+            <div class="absolute bottom-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="event.stopPropagation(); toggleForm('HAM MADDE', 'BORU')"
+                    class="p-1 bg-indigo-100 text-indigo-600 rounded hover:bg-indigo-200" title="Ekle">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+                <button onclick="event.stopPropagation(); filterStock('HAM MADDE', 'BORU')"
+                    class="p-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200" title="Listele">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- PROFİL -->
+        <div onclick="filterStock('HAM MADDE', 'PROFİL')"
+            class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition-all border-l-4 border-l-blue-400 relative group">
+            <div class="text-xs text-gray-500 font-semibold">PROFİL</div>
+            <div class="text-xl font-bold text-gray-800">{{ sub_counts.PROFİL|default:0 }}</div>
+            <div class="absolute bottom-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="event.stopPropagation(); toggleForm('HAM MADDE', 'PROFİL')"
+                    class="p-1 bg-indigo-100 text-indigo-600 rounded hover:bg-indigo-200" title="Ekle">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+                <button onclick="event.stopPropagation(); filterStock('HAM MADDE', 'PROFİL')"
+                    class="p-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200" title="Listele">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- SAC -->
+        <div onclick="filterStock('HAM MADDE', 'SAC')"
+            class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition-all border-l-4 border-l-blue-400 relative group">
+            <div class="text-xs text-gray-500 font-semibold">SAC</div>
+            <div class="text-xl font-bold text-gray-800">{{ sub_counts.SAC|default:0 }}</div>
+            <div class="absolute bottom-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="event.stopPropagation(); toggleForm('HAM MADDE', 'SAC')"
+                    class="p-1 bg-indigo-100 text-indigo-600 rounded hover:bg-indigo-200" title="Ekle">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+                <button onclick="event.stopPropagation(); filterStock('HAM MADDE', 'SAC')"
+                    class="p-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200" title="Listele">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- DOLU -->
+        <div onclick="filterStock('HAM MADDE', 'DOLU')"
+            class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition-all border-l-4 border-l-blue-400 relative group">
+            <div class="text-xs text-gray-500 font-semibold">DOLU MALZEME</div>
+            <div class="text-xl font-bold text-gray-800">{{ sub_counts.DOLU|default:0 }}</div>
+            <div class="absolute bottom-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="event.stopPropagation(); toggleForm('HAM MADDE', 'DOLU')"
+                    class="p-1 bg-indigo-100 text-indigo-600 rounded hover:bg-indigo-200" title="Ekle">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+                <button onclick="event.stopPropagation(); filterStock('HAM MADDE', 'DOLU')"
+                    class="p-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200" title="Listele">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- TEL -->
+        <div onclick="filterStock('HAM MADDE', 'TEL')"
+            class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition-all border-l-4 border-l-blue-400 relative group">
+            <div class="text-xs text-gray-500 font-semibold">TEL</div>
+            <div class="text-xl font-bold text-gray-800">{{ sub_counts.TEL|default:0 }}</div>
+            <div class="absolute bottom-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="event.stopPropagation(); toggleForm('HAM MADDE', 'TEL')"
+                    class="p-1 bg-indigo-100 text-indigo-600 rounded hover:bg-indigo-200" title="Ekle">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+                <button onclick="event.stopPropagation(); filterStock('HAM MADDE', 'TEL')"
+                    class="p-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200" title="Listele">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- KÜLÇE -->
+        <div onclick="filterStock('HAM MADDE', 'KÜLÇE')"
+            class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition-all border-l-4 border-l-blue-400 relative group">
+            <div class="text-xs text-gray-500 font-semibold">KÜLÇE</div>
+            <div class="text-xl font-bold text-gray-800">{{ sub_counts.KÜLÇE|default:0 }}</div>
+            <div class="absolute bottom-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="event.stopPropagation(); toggleForm('HAM MADDE', 'KÜLÇE')"
+                    class="p-1 bg-indigo-100 text-indigo-600 rounded hover:bg-indigo-200" title="Ekle">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+                <button onclick="event.stopPropagation(); filterStock('HAM MADDE', 'KÜLÇE')"
+                    class="p-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200" title="Listele">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="p-6">
+
+        <!-- Form Container -->
+        <div id="form-container" class="hidden bg-gray-50 p-6 rounded-xl border border-gray-200 mb-8 shadow-inner">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Yeni Stok Girişi</h3>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="stock_id" id="stock_id">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Ürün Kodu</label>
+                        <input type="text" name="product_code" readonly placeholder="(Otomatik Oluşturulacak)"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500 focus:outline-none cursor-not-allowed">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Ürün Adı</label>
+                        <input type="text" name="product_name" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Kategori</label>
+                        <select name="category" required onchange="handleCategoryChange()"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow bg-white">
+                            <option value="HAM MADDE">HAM MADDE</option>
+                            <option value="YARI MAMUL">YARI MAMUL</option>
+                            <option value="MAMUL">MAMUL</option>
+                            <option value="SARF MALZEME">SARF MALZEME</option>
+                            <option value="HIRDAVAT">HIRDAVAT</option>
+                        </select>
+                    </div>
+                    <div id="sub-category-wrapper" class="flex flex-col gap-1 hidden">
+                        <label class="text-sm font-semibold text-gray-700">Alt Kategori</label>
+                        <select name="sub_category"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow bg-white">
+                            <option value="">Seçiniz...</option>
+                            <option value="BORU">BORU</option>
+                            <option value="PROFİL">PROFİL</option>
+                            <option value="SAC">SAC</option>
+                            <option value="DOLU">DOLU MALZEME</option>
+                            <option value="TEL">TEL</option>
+                            <option value="KÜLÇE">KÜLÇE</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Kalite</label>
+                        <input type="text" name="quality"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">İrsaliye No</label>
+                        <input type="text" name="waybill_no"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Stok Alanı</label>
+                        <input type="text" name="stock_area"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Raf/Sepet No</label>
+                        <input type="text" name="shelf_basket"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Tedarikçi</label>
+                        <input type="text" name="supplier"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Lot No</label>
+                        <input type="text" name="lot_no"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Birim Ağırlık (kg)</label>
+                        <input type="number" step="0.001" name="unit_weight"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex gap-2">
+                            <div class="flex-1">
+                                <label class="text-sm font-semibold text-gray-700">Miktar</label>
+                                <input type="number" step="0.01" name="quantity" value="0"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                            </div>
+                            <div class="flex-1">
+                                <label for="min_stock_level" class="text-sm font-semibold text-gray-700">Kritik Stok
+                                    Miktarı</label>
+                                <input type="number" step="0.01" name="min_stock_level" id="min_stock_level" value="10"
+                                    class="w-full px-3 py-2 border border-blue-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-blue-50 hover:bg-white"
+                                    placeholder="Örn: 10">
+                            </div>
+                            <div class="w-24">
+                                <label class="text-sm font-semibold text-gray-700">Birim</label>
+                                <input type="text" name="unit" value="Adet"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 lg:col-span-3 flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Açıklama</label>
+                        <textarea name="description"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow min-h-[80px]"></textarea>
+                    </div>
+                    <div class="md:col-span-2 lg:col-span-3 flex flex-col gap-1">
+                        <label class="text-sm font-semibold text-gray-700">Dosya Ekle (PDF/Resim)</label>
+                        <input type="file" name="document" accept=".pdf, .png, .jpg, .jpeg"
+                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-colors">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                    <button type="button"
+                        class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                        onclick="toggleForm()">İptal</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md shadow transition-colors font-medium">Kaydet</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            {% for item in stock_items %}
+            <div class="stock-item bg-white rounded-lg border border-gray-200 p-4 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-md hover:border-indigo-300 transition-all relative group"
+                data-category="{{ item.category }}" data-subcategory="{{ item.sub_category }}">
+                {% if item.document %}
+                <div
+                    class="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] px-2 py-0.5 rounded shadow-sm transform rotate-12 font-bold tracking-wider z-10">
+                    DOSYA
+                </div>
+                {% endif %}
+
+                <div class="flex flex-col gap-1 min-w-[200px] border-r-0 md:border-r border-gray-100 md:pr-4">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="font-bold text-gray-800 text-lg">{{ item.product_name }}</div>
+                        {% if item.qr_code %}
+                        <img src="{{ item.qr_code.url }}"
+                            class="w-12 h-12 object-contain border border-gray-200 rounded p-0.5 bg-white shadow-sm flex-shrink-0"
+                            alt="QR" title="{{ item.product_code }}">
+                        {% endif %}
+                    </div>
+                    <div class="flex gap-2 items-center">
+                        <div class="text-xs font-bold text-indigo-700 bg-indigo-100 px-2 py-1 rounded inline-block">
+                            {{ item.product_code }}
+                        </div>
+                        <div
+                            class="text-[10px] font-bold text-gray-600 bg-gray-100 px-2 py-1 rounded border border-gray-200">
+                            {{ item.category }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4 w-full md:w-auto">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Miktar</span>
+                        <span class="font-medium text-gray-700">{{ item.quantity }} {{ item.unit }}</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Stok Alanı</span>
+                        <span class="font-medium text-gray-700">{{ item.stock_area }}</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Kalite</span>
+                        <span class="font-medium text-gray-700">{{ item.quality }}</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">İrsaliye</span>
+                        <span class="font-medium text-gray-700">{{ item.waybill_no }}</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 ml-auto mt-2 md:mt-0 w-full md:w-auto justify-end">
+                    <button onclick="viewStock(this)" data-product-code="{{ item.product_code }}"
+                        data-product-name="{{ item.product_name }}" data-category="{{ item.category }}"
+                        data-sub-category="{{ item.sub_category }}" data-quantity="{{ item.quantity }}"
+                        data-unit="{{ item.unit }}" data-stock-area="{{ item.stock_area }}"
+                        data-shelf-basket="{{ item.shelf_basket|default:'' }}" data-quality="{{ item.quality }}"
+                        data-unit-weight="{{ item.unit_weight|default:'' }}" data-waybill-no="{{ item.waybill_no }}"
+                        data-supplier="{{ item.supplier|default:'' }}" data-lot-no="{{ item.lot_no|default:'' }}"
+                        data-description="{{ item.description }}"
+                        data-qr-url="{% if item.qr_code %}{{ item.qr_code.url }}{% endif %}"
+                        data-document-url="{% if item.document %}{{ item.document.url }}{% endif %}"
+                        class="text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-full border border-indigo-200 transition-colors whitespace-nowrap flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                            </path>
+                        </svg>
+                        Görüntüle
+                    </button>
+
+                    <div class="flex gap-1">
+                        <button
+                            class="w-8 h-8 flex justify-center items-center bg-gray-50 hover:bg-white text-gray-500 hover:text-indigo-600 border border-gray-200 hover:border-indigo-600 rounded transition-all"
+                            title="Düzenle" onclick="editStock(this)" data-id="{{ item.id }}"
+                            data-product-code="{{ item.product_code }}" data-product-name="{{ item.product_name }}"
+                            data-quality="{{ item.quality }}" data-waybill-no="{{ item.waybill_no }}"
+                            data-stock-area="{{ item.stock_area }}" data-unit="{{ item.unit }}"
+                            data-quantity="{{ item.quantity }}" data-description="{{ item.description }}"
+                            data-category="{{ item.category }}" data-sub-category="{{ item.sub_category }}"
+                            data-unit-weight="{{ item.unit_weight|default:'' }}"
+                            data-shelf-basket="{{ item.shelf_basket|default:'' }}"
+                            data-supplier="{{ item.supplier|default:'' }}" data-lot-no="{{ item.lot_no|default:'' }}">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                        </button>
+                        <form action="{% url 'delete_stock' item.id %}" method="POST" class="inline"
+                            onsubmit="return confirm('Silmek istediğinize emin misiniz?');">
+                            {% csrf_token %}
+                            <button type="submit"
+                                class="w-8 h-8 flex justify-center items-center bg-gray-50 hover:bg-white text-gray-500 hover:text-red-500 border border-gray-200 hover:border-red-500 rounded transition-all"
+                                title="Sil">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div
+                class="text-center text-gray-500 py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300 flex flex-col items-center">
+                <svg class="w-12 h-12 text-gray-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+                <p>Henüz stok kaydı bulunamadı.</p>
+                <button class="mt-3 text-sm text-indigo-600 font-medium hover:underline" onclick="toggleForm()">Yeni
+                    kayıt ekle</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Stock Detail Modal -->
+<div id="stock-detail-modal"
+    class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center sticky top-0 bg-white z-10">
+            <h3 class="text-xl font-bold text-gray-800">Stok Detayı</h3>
+            <button onclick="closeStockModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Details -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="grid grid-cols-2 gap-x-4 gap-y-6">
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Ürün
+                            Kodu</span>
+                        <div id="modal-product-code"
+                            class="text-gray-900 font-semibold bg-gray-50 px-2 py-1 rounded border border-gray-100 inline-block">
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Ürün
+                            Adı</span>
+                        <div id="modal-product-name" class="text-gray-900 font-medium text-lg leading-tight"></div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Kategori /
+                            Alt</span>
+                        <div class="text-gray-700 font-medium">
+                            <span id="modal-category"></span>
+                            <span id="modal-sub-category" class="text-gray-400 mx-1"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Miktar</span>
+                        <div class="text-gray-900 font-bold text-lg">
+                            <span id="modal-quantity"></span> <span id="modal-unit"
+                                class="text-sm text-gray-500 font-normal"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Stok
+                            Alanı</span>
+                        <div id="modal-stock-area" class="text-gray-800 font-medium"></div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Raf / Sepet
+                            No</span>
+                        <div id="modal-shelf-basket" class="text-gray-800 font-medium"></div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Kalite</span>
+                        <div id="modal-quality" class="text-gray-800 font-medium"></div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Birim
+                            Ağırlık</span>
+                        <div id="modal-unit-weight" class="text-gray-800 font-medium"></div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">İrsaliye
+                            No</span>
+                        <div id="modal-waybill-no" class="text-gray-800 font-medium"></div>
+                    </div>
+                    <div>
+                        <span
+                            class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Tedarikçi</span>
+                        <div id="modal-supplier" class="text-gray-800 font-medium"></div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Lot No</span>
+                        <div id="modal-lot-no" class="text-gray-800 font-medium"></div>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-gray-100">
+                    <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-2">Açıklama</span>
+                    <div id="modal-description"
+                        class="text-gray-700 bg-gray-50 p-4 rounded-lg border border-gray-100 text-sm whitespace-pre-wrap">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Visuals -->
+            <div class="space-y-6 flex flex-col items-center pl-0 lg:pl-6 lg:border-l lg:border-gray-100">
+                <!-- Document Preview -->
+                <div id="modal-document-container" class="w-full text-center hidden">
+                    <span class="text-xs text-gray-500 uppercase font-bold mb-2 block tracking-wider">Dosya /
+                        Resim</span>
+                    <div class="relative group">
+                        <img id="modal-document-image" src=""
+                            class="w-full rounded-lg border border-gray-200 shadow-sm object-contain max-h-64 hidden bg-white">
+                        <a id="modal-document-link" href="#" target="_blank"
+                            class="text-indigo-600 hover:text-indigo-800 text-xs font-semibold mt-2 inline-flex items-center gap-1 bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100 transition-colors">
+                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            Orijinal Dosyayı Aç
+                        </a>
+                    </div>
+                </div>
+
+                <!-- QR Code -->
+                <div class="p-4 bg-white border border-gray-200 rounded-xl shadow-sm text-center w-full max-w-[200px]">
+                    <span class="text-xs text-gray-500 uppercase font-bold mb-2 block tracking-wider">QR Kod</span>
+                    <img id="modal-qr-code" src="" alt="QR" class="w-full h-auto object-contain mx-auto">
+                    <div id="modal-qr-code-text"
+                        class="text-[10px] font-mono mt-2 text-gray-500 break-all border-t pt-1 border-gray-100"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end sticky bottom-0 rounded-b-xl">
+            <button onclick="closeStockModal()"
+                class="px-5 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-semibold transition-colors shadow-sm">Kapat</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function viewStock(btn) {
+        const ds = btn.dataset;
+
+        // Populate Text Fields
+        document.getElementById('modal-product-code').textContent = ds.productCode || '-';
+        document.getElementById('modal-product-name').textContent = ds.productName || '-';
+        document.getElementById('modal-category').textContent = ds.category || '-';
+        document.getElementById('modal-sub-category').textContent = ds.subCategory && ds.subCategory !== 'None' ? `(${ds.subCategory})` : '';
+        document.getElementById('modal-quantity').textContent = ds.quantity || '0';
+        document.getElementById('modal-unit').textContent = ds.unit || '';
+        document.getElementById('modal-stock-area').textContent = ds.stockArea || '-';
+        document.getElementById('modal-shelf-basket').textContent = ds.shelfBasket && ds.shelfBasket !== 'None' ? ds.shelfBasket : '-';
+        document.getElementById('modal-quality').textContent = ds.quality || '-';
+        document.getElementById('modal-unit-weight').textContent = ds.unitWeight && ds.unitWeight !== 'None' ? `${ds.unitWeight} kg` : '-';
+        document.getElementById('modal-waybill-no').textContent = ds.waybillNo || '-';
+        document.getElementById('modal-supplier').textContent = ds.supplier && ds.supplier !== 'None' ? ds.supplier : '-';
+        document.getElementById('modal-lot-no').textContent = ds.lotNo && ds.lotNo !== 'None' ? ds.lotNo : '-';
+        document.getElementById('modal-description').textContent = ds.description || '-';
+
+        // OR Code
+        const qrImg = document.getElementById('modal-qr-code');
+        const qrText = document.getElementById('modal-qr-code-text');
+        if (ds.qrUrl) {
+            qrImg.src = ds.qrUrl;
+            qrText.textContent = ds.productCode;
+            qrImg.parentElement.classList.remove('hidden');
+        } else {
+            qrImg.parentElement.classList.add('hidden');
+        }
+
+        // Document
+        const docContainer = document.getElementById('modal-document-container');
+        const docImg = document.getElementById('modal-document-image');
+        const docLink = document.getElementById('modal-document-link');
+
+        if (ds.documentUrl) {
+            docContainer.classList.remove('hidden');
+            docLink.href = ds.documentUrl;
+            docLink.classList.remove('hidden');
+
+            // Check if image
+            const ext = ds.documentUrl.split('.').pop().toLowerCase();
+            if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'].includes(ext)) {
+                docImg.src = ds.documentUrl;
+                docImg.classList.remove('hidden');
+            } else {
+                docImg.classList.add('hidden');
+            }
+        } else {
+            docContainer.classList.add('hidden');
+        }
+
+        document.getElementById('stock-detail-modal').classList.remove('hidden');
+    }
+
+    function closeStockModal() {
+        document.getElementById('stock-detail-modal').classList.add('hidden');
+    }
+
+    function resetForm() {
+        document.getElementById('stock_id').value = '';
+        document.querySelector('h3').innerText = 'Yeni Stok Girişi';
+        document.querySelector('input[name="product_code"]').value = '';
+        document.querySelector('input[name="product_name"]').value = '';
+        document.querySelector('input[name="quality"]').value = '';
+        document.querySelector('input[name="waybill_no"]').value = '';
+        document.querySelector('input[name="stock_area"]').value = '';
+        document.querySelector('input[name="unit"]').value = 'Adet';
+        document.querySelector('input[name="quantity"]').value = '0';
+        document.querySelector('textarea[name="description"]').value = '';
+        document.querySelector('select[name="category"]').value = 'HAM MADDE';
+        document.querySelector('select[name="sub_category"]').value = '';
+        document.querySelector('input[name="document"]').value = '';
+
+        // New Fields
+        if (document.querySelector('input[name="unit_weight"]')) document.querySelector('input[name="unit_weight"]').value = '';
+        if (document.querySelector('input[name="shelf_basket"]')) document.querySelector('input[name="shelf_basket"]').value = '';
+        if (document.querySelector('input[name="supplier"]')) document.querySelector('input[name="supplier"]').value = '';
+        if (document.querySelector('input[name="lot_no"]')) document.querySelector('input[name="lot_no"]').value = '';
+
+        handleCategoryChange();
+    }
+
+    function toggleForm(category, subCategory = null) {
+        const form = document.getElementById('form-container');
+        // If form is hidden OR we are requesting a specific category (which means we want to open it)
+        if (form.classList.contains('hidden') || category) {
+            form.classList.remove('hidden');
+            resetForm();
+
+            if (category) {
+                document.querySelector('select[name="category"]').value = category;
+                handleCategoryChange(); // Trigger sub-category visibility check
+
+                if (subCategory) {
+                    document.querySelector('select[name="sub_category"]').value = subCategory;
+                }
+            }
+
+            form.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            form.classList.add('hidden');
+        }
+    }
+
+    function editStock(btn) {
+        const form = document.getElementById('form-container');
+        form.classList.remove('hidden');
+        resetForm(); // Clean state first
+
+        const ds = btn.dataset;
+
+        document.querySelector('h3').innerText = 'Stok Düzenle';
+        document.getElementById('stock_id').value = ds.id;
+        document.querySelector('input[name="product_code"]').value = ds.productCode;
+        document.querySelector('input[name="product_name"]').value = ds.productName;
+        document.querySelector('input[name="quality"]').value = ds.quality;
+        document.querySelector('input[name="waybill_no"]').value = ds.waybillNo;
+        document.querySelector('input[name="stock_area"]').value = ds.stockArea;
+        document.querySelector('input[name="unit"]').value = ds.unit;
+        document.querySelector('input[name="quantity"]').value = ds.quantity.replace(',', '.');
+        document.querySelector('textarea[name="description"]').value = ds.description;
+
+        // New Fields
+        if (ds.unitWeight && ds.unitWeight !== 'None' && document.querySelector('input[name="unit_weight"]'))
+            document.querySelector('input[name="unit_weight"]').value = ds.unitWeight.replace(',', '.');
+        if (ds.shelfBasket && ds.shelfBasket !== 'None' && document.querySelector('input[name="shelf_basket"]'))
+            document.querySelector('input[name="shelf_basket"]').value = ds.shelfBasket;
+        if (ds.supplier && ds.supplier !== 'None' && document.querySelector('input[name="supplier"]'))
+            document.querySelector('input[name="supplier"]').value = ds.supplier;
+        if (ds.lotNo && ds.lotNo !== 'None' && document.querySelector('input[name="lot_no"]'))
+            document.querySelector('input[name="lot_no"]').value = ds.lotNo;
+
+        if (ds.category) {
+            document.querySelector('select[name="category"]').value = ds.category;
+            handleCategoryChange();
+        }
+
+        if (ds.subCategory && ds.subCategory !== 'None') {
+            document.querySelector('select[name="sub_category"]').value = ds.subCategory;
+        }
+
+        form.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function filterStock(category, subCategory = null) {
+        // Hide all sub-category containers first
+        document.querySelectorAll('.sub-cat-container').forEach(el => el.classList.add('hidden'));
+
+        // Show relevant sub-category container if exists and we are not just filtering by a sub-category
+        // We want to show it if we clicked the main category
+        if (category === 'HAM MADDE') {
+            const subCatContainer = document.getElementById('sub-cat-container-HAM-MADDE');
+            if (subCatContainer) {
+                subCatContainer.classList.remove('hidden');
+            }
+        }
+
+        const items = document.querySelectorAll('.stock-item');
+        items.forEach(item => {
+            let matchesCategory = (category === 'ALL' || item.dataset.category === category);
+            let matchesSubCategory = true;
+
+            if (subCategory) {
+                matchesSubCategory = (item.dataset.subcategory === subCategory);
+            }
+
+            if (matchesCategory && matchesSubCategory) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    function handleCategoryChange() {
+        const category = document.querySelector('select[name="category"]').value;
+        const subWrapper = document.getElementById('sub-category-wrapper');
+        const subSelect = document.querySelector('select[name="sub_category"]');
+
+        if (category === 'HAM MADDE') {
+            subWrapper.classList.remove('hidden');
+        } else {
+            subWrapper.classList.add('hidden');
+            subSelect.value = ''; // Reset selection
+        }
+    }
+
+    // Call on load to ensure correct state if page reloads (e.g. validtion error)
+    document.addEventListener('DOMContentLoaded', handleCategoryChange);
+</script>
+{% endblock %}

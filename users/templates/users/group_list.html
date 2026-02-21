@@ -1,0 +1,52 @@
+{% extends 'products/base.html' %}
+
+{% block title %}Kullanıcı Grupları{% endblock %}
+
+{% block page_title %}Grup Yönetimi{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Kullanıcı Grupları</h2>
+        <a href="{% url 'users:add_group' %}"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Yeni Grup Ekle
+        </a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-gray-600">
+                <thead class="bg-gray-50 text-xs uppercase font-semibold text-gray-500 border-b border-gray-200">
+                    <tr>
+                        <th class="px-6 py-4">Grup Adı</th>
+                        <th class="px-6 py-4 text-right">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for group in groups %}
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 font-medium text-gray-900">{{ group.name }}</td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="{% url 'users:edit_group' group.pk %}"
+                                class="text-indigo-600 hover:text-indigo-800 font-medium mr-3">Düzenle</a>
+                            <a href="{% url 'users:delete_group' group.pk %}"
+                                class="text-red-600 hover:text-red-800 font-medium">Sil</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="px-6 py-12 text-center text-gray-400">
+                            Henüz kayıtlı grup bulunamadı.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,397 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800">{{ title|default:"Yeni Satış Teklifi Oluştur" }}</h1>
+
+    <form method="post" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 relative" id="offerForm">
+        <button type="button" id="settingsBtn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+            <i class="fas fa-cog text-xl"></i>
+        </button>
+        {% csrf_token %}
+
+        <!-- Settings Modal -->
+        <div id="settingsModal"
+            class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+            <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold">Teklif Ayarları</h3>
+                    <button type="button" id="closeSettings" class="text-gray-600 hover:text-gray-900">&times;</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[70vh] overflow-y-auto p-2">
+                    <!-- Company Details -->
+                    <div class="col-span-1 md:col-span-2 border-b pb-2 mb-2">
+                        <h4 class="font-bold text-sm text-blue-600 mb-2">Firma Bilgileri</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            <div><label class="block text-xs font-bold">Firma Adı</label>{{ form.company_name }}</div>
+                            <div><label class="block text-xs font-bold">Vergi Dairesi</label>
+                                {{ form.company_tax_office }}</div>
+                            <div><label class="block text-xs font-bold">Vergi No</label>{{ form.company_tax_number }}
+                            </div>
+                            <div class="md:col-span-2"><label class="block text-xs font-bold">Adres</label>
+                                {{form.company_address }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Offer Specifics -->
+                    <div class="col-span-1 md:col-span-2 border-b pb-2 mb-2">
+                        <h4 class="font-bold text-sm text-blue-600 mb-2">Teklif Detayları</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            <div><label class="block text-xs font-bold">Teklif Tarihi</label>{{ form.offer_date }}</div>
+                            <div><label class="block text-xs font-bold">Geçerlilik Tarihi</label>
+                                {{ form.validity_date}}</div>
+                            <div><label class="block text-xs font-bold">Teslim Yeri</label>{{ form.delivery_place }}
+                            </div>
+                            <div><label class="block text-xs font-bold">Teslim Tarihi</label>{{ form.delivery_date }}
+                            </div>
+                            <div><label class="block text-xs font-bold">Avans</label>{{ form.advance_payment }}</div>
+                            <div><label class="block text-xs font-bold">Ödeme Metodu</label>{{ form.payment_method }}
+                            </div>
+                            <div class="md:col-span-2"><label class="block text-xs font-bold">Anlaşma Şartları</label>
+                                {{form.terms }}</div>
+                            <div class="md:col-span-2"><label class="block text-xs font-bold">Notlar</label>
+                                {{form.notes }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Bank Details -->
+                    <div class="col-span-1 md:col-span-2">
+                        <h4 class="font-bold text-sm text-blue-600 mb-2">Banka Bilgileri</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            <div><label class="block text-xs font-bold">Alıcı Adı</label>{{ form.bank_recipient }}</div>
+                            <div><label class="block text-xs font-bold">Banka Adı</label>{{ form.bank_name }}</div>
+                            <div><label class="block text-xs font-bold">Şube</label>{{ form.bank_branch }}</div>
+                            <div><label class="block text-xs font-bold">IBAN</label>{{ form.bank_iban }}</div>
+                            <div class="md:col-span-2"><label class="block text-xs font-bold">SWIFT</label>
+                                {{form.bank_swift }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex justify-end">
+                    <button type="button" id="saveSettings"
+                        class="bg-blue-500 text-white px-4 py-2 rounded">Tamam</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_customer">
+                    Müşteri
+                </label>
+                {{ form.customer }}
+                {% if form.customer.errors %}
+                <p class="text-red-500 text-xs italic">{{ form.customer.errors }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_currency">
+                    Para Birimi
+                </label>
+                {{ form.currency }}
+                {% if form.currency.errors %}
+                <p class="text-red-500 text-xs italic">{{ form.currency.errors }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_language">
+                    Teklif Dili
+                </label>
+                {{ form.language }}
+                {% if form.language.errors %}
+                <p class="text-red-500 text-xs italic">{{ form.language.errors }}</p>
+                {% endif %}
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_description">
+                    Açıklama
+                </label>
+                {{ form.description }}
+            </div>
+        </div>
+
+        <h3 class="text-xl font-bold mb-4 text-gray-700 border-b pb-2">Ürünler</h3>
+
+        {{ formset.management_form }}
+
+        <div id="item-form-container">
+            {% for item_form in formset %}
+            <div class="item-row grid grid-cols-12 gap-4 mb-4 items-end border-b pb-4">
+                {{ item_form.id }}
+
+                <!-- Type Selection -->
+                <div class="col-span-12 md:col-span-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-1">Tip</label>
+                    {{ item_form.item_type }}
+                </div>
+
+                <!-- Product/SubPart Selection -->
+                <div class="col-span-12 md:col-span-5 relative">
+                    <label class="block text-gray-700 text-sm font-bold mb-1">Ürün / Alt Parça</label>
+                    <div class="product-container">
+                        {{ item_form.product }}
+                    </div>
+                    <div class="subpart-container hidden">
+                        {{ item_form.subpart }}
+                    </div>
+                </div>
+
+                <div class="col-span-6 md:col-span-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-1">Miktar</label>
+                    {{ item_form.quantity }}
+                </div>
+                <div class="col-span-6 md:col-span-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-1">Birim Fiyat (<span
+                            class="currency-label">TL</span>)</label>
+                    {{ item_form.unit_price }}
+                </div>
+                <div class="col-span-6 md:col-span-1">
+                    <label class="block text-gray-700 text-sm font-bold mb-1">Toplam</label>
+                    <span class="row-total text-gray-700 font-bold block py-2 text-sm">0.00</span>
+                </div>
+                <div class="col-span-12 md:col-span-12 text-right">
+                    {% if formset.can_delete %}
+                    <div class="hidden">{{ item_form.DELETE }}</div>
+                    <button type="button"
+                        class="delete-row-btn text-red-500 hover:text-red-700 font-bold text-sm">Sil</button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-6">
+            <button type="button" id="add-item-btn"
+                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm">
+                + Ürün Ekle
+            </button>
+        </div>
+
+        <div class="flex justify-end border-t pt-4">
+            <div class="text-xl font-bold text-gray-800">
+                Genel Toplam: <span id="grand-total">0.00</span> <span class="currency-label">TL</span>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-end mt-6">
+            <button
+                class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline"
+                type="submit">
+                Teklifi Kaydet
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Hidden Empty Form Template -->
+<div id="empty-form-template" class="hidden">
+    <div class="item-row grid grid-cols-12 gap-4 mb-4 items-end border-b pb-4">
+        {{ formset.empty_form.id }}
+
+        <!-- Type Selection -->
+        <div class="col-span-12 md:col-span-2">
+            <label class="block text-gray-700 text-sm font-bold mb-1">Tip</label>
+            {{ formset.empty_form.item_type }}
+        </div>
+
+        <!-- Product/SubPart Selection -->
+        <div class="col-span-12 md:col-span-5 relative">
+            <label class="block text-gray-700 text-sm font-bold mb-1">Ürün / Alt Parça</label>
+            <div class="product-container">
+                {{ formset.empty_form.product }}
+            </div>
+            <div class="subpart-container hidden">
+                {{ formset.empty_form.subpart }}
+            </div>
+        </div>
+
+        <div class="col-span-6 md:col-span-2">
+            <label class="block text-gray-700 text-sm font-bold mb-1">Miktar</label>
+            {{ formset.empty_form.quantity }}
+        </div>
+        <div class="col-span-6 md:col-span-2">
+            <label class="block text-gray-700 text-sm font-bold mb-1">Birim Fiyat (<span
+                    class="currency-label">TL</span>)</label>
+            {{ formset.empty_form.unit_price }}
+        </div>
+        <div class="col-span-6 md:col-span-1">
+            <label class="block text-gray-700 text-sm font-bold mb-1">Toplam</label>
+            <span class="row-total text-gray-700 font-bold block py-2 text-sm">0.00</span>
+        </div>
+        <div class="col-span-12 md:col-span-12 text-right">
+            <div class="hidden">{{ formset.empty_form.DELETE }}</div>
+            <button type="button" class="delete-row-btn text-red-500 hover:text-red-700 font-bold text-sm">Sil</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const container = document.getElementById('item-form-container');
+        const addButton = document.getElementById('add-item-btn');
+        const totalForms = document.getElementById('id_items-TOTAL_FORMS');
+        const currencySelect = document.getElementById('id_currency');
+        const emptyFormTemplate = document.getElementById('empty-form-template').innerHTML;
+
+        // Currency update logic
+        function updateCurrencyLabels() {
+            const selectedCurrency = currencySelect.value;
+            document.querySelectorAll('.currency-label').forEach(label => {
+                label.textContent = selectedCurrency;
+            });
+            calculateTotals();
+        }
+
+        currencySelect.addEventListener('change', updateCurrencyLabels);
+        updateCurrencyLabels(); // Initial set
+
+        // Event Delegation for Inputs (Calculation & Type Toggle)
+        container.addEventListener('input', function (e) {
+            if (e.target.matches('input, select')) {
+                calculateTotals();
+            }
+            if (e.target.classList.contains('item-type-select')) {
+                toggleProductSubpart(e.target.closest('.item-row'));
+            }
+        });
+
+        // Initialize visibility for existing rows
+        container.querySelectorAll('.item-row').forEach(row => {
+            toggleProductSubpart(row);
+        });
+
+        function toggleProductSubpart(row) {
+            const typeSelect = row.querySelector('.item-type-select');
+            const productContainer = row.querySelector('.product-container');
+            const subpartContainer = row.querySelector('.subpart-container');
+            const productSelect = row.querySelector('.product-select');
+            const subpartSelect = row.querySelector('.subpart-select');
+
+            if (typeSelect.value === 'PRODUCT') {
+                productContainer.classList.remove('hidden');
+                subpartContainer.classList.add('hidden');
+                productSelect.required = true;
+                subpartSelect.required = false;
+            } else {
+                productContainer.classList.add('hidden');
+                subpartContainer.classList.remove('hidden');
+                productSelect.required = false;
+                subpartSelect.required = true;
+            }
+        }
+
+        function calculateTotals() {
+            let grandTotal = 0;
+            const rows = container.querySelectorAll('.item-row:not(.hidden)');
+            const currentCurrency = currencySelect.value;
+
+            rows.forEach(row => {
+                const deleteInput = row.querySelector('input[name$="-DELETE"]');
+                if (deleteInput && deleteInput.checked) return;
+
+                const qtyInput = row.querySelector('.quantity-input');
+                const priceInput = row.querySelector('.price-input');
+                const totalSpan = row.querySelector('.row-total');
+
+                const qty = parseFloat(qtyInput.value) || 0;
+                const price = parseFloat(priceInput.value) || 0;
+                const total = qty * price;
+
+                totalSpan.innerHTML = total.toFixed(2) + ' <span class="currency-label">' + currentCurrency + '</span>';
+                grandTotal += total;
+            });
+
+            document.getElementById('grand-total').textContent = grandTotal.toFixed(2);
+        }
+
+        calculateTotals(); // Initial Calc
+
+        // Add new row using empty_form
+        addButton.addEventListener('click', function () {
+            const formCount = parseInt(totalForms.value);
+            const newRowHtml = emptyFormTemplate.replace(/__prefix__/g, formCount);
+
+            // Create a temporary div to parse HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = newRowHtml;
+            const newRow = tempDiv.firstElementChild;
+
+            container.appendChild(newRow);
+            totalForms.value = formCount + 1;
+
+            // Initialize the new row
+            toggleProductSubpart(newRow);
+            updateCurrencyLabels(); // Ensure currency label is correct
+        });
+
+        // Delete row logic
+        container.addEventListener('click', function (e) {
+            if (e.target.classList.contains('delete-row-btn')) {
+                const row = e.target.closest('.item-row');
+                const deleteInput = row.querySelector('input[name$="-DELETE"]');
+
+                if (deleteInput) {
+                    // Existing saved item: Check DELETE, hide, and disable validation
+                    deleteInput.checked = true;
+                    row.classList.add('hidden');
+
+                    // Remove required attributes so browser doesn't block submission on hidden fields
+                    row.querySelectorAll('input, select').forEach(input => {
+                        input.required = false;
+                    });
+                } else {
+                    // New unsaved item: Remove from DOM and re-index
+                    row.remove();
+                    updateFormIndices();
+                }
+                calculateTotals();
+            }
+        });
+
+        function updateFormIndices() {
+            const rows = container.querySelectorAll('.item-row');
+            totalForms.value = rows.length;
+
+            rows.forEach((row, index) => {
+                // Update ID and Name of inputs to match new index
+                row.querySelectorAll('input, select, textarea').forEach(input => {
+                    const nameRegex = /items-(\d+)-/;
+                    const idRegex = /id_items-(\d+)-/;
+
+                    if (input.name) {
+                        input.name = input.name.replace(nameRegex, `items-${index}-`);
+                    }
+                    if (input.id) {
+                        input.id = input.id.replace(idRegex, `id_items-${index}-`);
+                    }
+                });
+            });
+        }
+
+        // Settings Modal Logic (unchanged)
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const closeSettings = document.getElementById('closeSettings');
+        const saveSettings = document.getElementById('saveSettings');
+
+        function toggleModal() {
+            settingsModal.classList.toggle('hidden');
+        }
+
+        settingsBtn.addEventListener('click', toggleModal);
+        closeSettings.addEventListener('click', toggleModal);
+        saveSettings.addEventListener('click', toggleModal);
+
+        window.addEventListener('click', function (e) {
+            if (e.target == settingsModal) {
+                toggleModal();
+            }
+        });
+    });
+</script>
+{% endblock %}

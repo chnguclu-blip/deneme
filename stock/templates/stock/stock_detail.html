@@ -1,0 +1,265 @@
+{% extends 'products/base.html' %}
+
+{% block title %}Stok Detayı - {{ stock.product_code }}{% endblock %}
+
+{% block page_title %}Stok Detayı{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto">
+
+    <!-- Breadcrumb -->
+    <nav class="flex mb-6" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+                <a href="{% url 'stok_home' %}"
+                    class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-indigo-600">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z">
+                        </path>
+                    </svg>
+                    Stok Paneli
+                </a>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    <a href="{% url 'stok_goruntule' %}"
+                        class="ml-1 text-sm font-medium text-gray-700 hover:text-indigo-600 md:ml-2">Görüntüle</a>
+                </div>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Detay</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+
+    <div class="bg-white rounded-xl shadow-2xl overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white z-10">
+            <h3 class="text-xl font-bold text-gray-800">Stok Detayı</h3>
+            <div class="flex items-center gap-3">
+                <a href="{% url 'stok_detay_list' stock.product_name %}"
+                    class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Details -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="grid grid-cols-2 gap-x-4 gap-y-6">
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Ürün
+                            Kodu</span>
+                        <div
+                            class="text-gray-900 font-semibold bg-gray-50 px-2 py-1 rounded border border-gray-100 inline-block">
+                            {{ stock.product_code }}
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Ürün
+                            Adı</span>
+                        <div class="text-gray-900 font-medium text-lg leading-tight">{{ stock.product_name }}</div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Kategori /
+                            Alt</span>
+                        <div class="text-gray-700 font-medium">
+                            {{ stock.category }}
+                            {% if stock.sub_category %}
+                            <span class="text-gray-400 mx-1">({{ stock.sub_category }})</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Miktar</span>
+                        <div class="text-gray-900 font-bold text-lg">
+                            {{ stock.quantity }} <span class="text-sm text-gray-500 font-normal">{{ stock.unit }}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Stok
+                            Alanı</span>
+                        <div class="text-gray-800 font-medium">{{ stock.stock_area|default:"-" }}</div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Raf / Sepet
+                            No</span>
+                        <div class="text-gray-800 font-medium">{{ stock.shelf_basket|default:"-" }}</div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Kalite</span>
+                        <div class="text-gray-800 font-medium">{{ stock.quality|default:"-" }}</div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Birim
+                            Ağırlık</span>
+                        <div class="text-gray-800 font-medium">
+                            {% if stock.unit_weight %}
+                            {{ stock.unit_weight }} kg
+                            {% else %}
+                            -
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">İrsaliye
+                            No</span>
+                        <div class="text-gray-800 font-medium">{{ stock.waybill_no|default:"-" }}</div>
+                    </div>
+                    <div>
+                        <span
+                            class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Tedarikçi</span>
+                        <div class="text-gray-800 font-medium">{{ stock.supplier|default:"-" }}</div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-1">Lot No</span>
+                        <div class="text-gray-800 font-medium">{{ stock.lot_no|default:"-" }}</div>
+                    </div>
+                </div>
+
+                {% if stock.description %}
+                <div class="pt-4 border-t border-gray-100">
+                    <span class="text-xs text-gray-500 uppercase font-bold tracking-wider block mb-2">Açıklama</span>
+                    <div
+                        class="text-gray-700 bg-gray-50 p-4 rounded-lg border border-gray-100 text-sm whitespace-pre-wrap">
+                        {{ stock.description }}</div>
+                </div>
+                {% endif %}
+
+                <div class="pt-4 text-xs text-gray-400 flex justify-between">
+                    <span>Kayıt Tarihi: {{ stock.created_at|date:"d.m.Y H:i" }}</span>
+                    {% if stock.created_by %}
+                    <span>İşlemi yapan : {{ stock.created_by.username }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right Column: Visuals -->
+            <div class="space-y-6 flex flex-col items-center pl-0 lg:pl-6 lg:border-l lg:border-gray-100">
+                <!-- Document Preview -->
+                {% if stock.document %}
+                <div class="w-full text-center">
+                    <span class="text-xs text-gray-500 uppercase font-bold mb-2 block tracking-wider">Dosya /
+                        Resim</span>
+                    <div class="relative group">
+                        {% if stock.is_image %}
+                        <img src="{{ stock.document.url }}"
+                            class="w-full rounded-lg border border-gray-200 shadow-sm object-contain max-h-64 bg-white">
+                        {% endif %}
+
+                        <div class="mt-2">
+                            <a href="{{ stock.document.url }}" target="_blank"
+                                class="text-indigo-600 hover:text-indigo-800 text-xs font-semibold inline-flex items-center gap-1 bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100 transition-colors">
+                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                Dosyayı Aç
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- QR Code -->
+                {% if stock.qr_code %}
+                <div class="p-4 bg-white border border-gray-200 rounded-xl shadow-sm text-center w-full max-w-[200px]">
+                    <span class="text-xs text-gray-500 uppercase font-bold mb-2 block tracking-wider">QR Kod</span>
+                    <img src="{{ stock.qr_code.url }}" alt="QR" class="w-full h-auto object-contain mx-auto">
+                    <div class="text-[10px] font-mono mt-2 text-gray-500 break-all border-t pt-1 border-gray-100">
+                        {{ stock.product_code }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Stock Movements History -->
+        <div class="px-6 py-8 border-t border-gray-100 bg-gray-50/50">
+            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Stok Hareket Geçmişi
+            </h3>
+
+            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-gray-50 text-xs text-gray-500 uppercase font-semibold border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-3">Tarih</th>
+                            <th class="px-6 py-3">İşlem</th>
+                            <th class="px-6 py-3">Miktar</th>
+                            <th class="px-6 py-3">Detay (Proje/Alan/Kim)</th>
+                            <th class="px-6 py-3">Yapan</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <!-- Initial Entry (Always exists) -->
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-3 text-gray-600 font-mono text-xs">{{ stock.created_at|date:"d.m.Y H:i"
+                                }}</td>
+                            <td class="px-6 py-3">
+                                <span
+                                    class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium border border-green-200">Giriş</span>
+                            </td>
+                            <td class="px-6 py-3 font-bold text-gray-800">
+                                +{{ stock.initial_quantity }} {{ stock.unit }}
+                            </td>
+                            <td class="px-6 py-3 text-gray-600 text-xs">
+                                <span class="block">Tedarikçi: {{ stock.supplier|default:"-" }}</span>
+                                <span class="block">Konum: {{ stock.stock_area }} / {{ stock.shelf_basket|default:"-"
+                                    }}</span>
+                            </td>
+                            <td class="px-6 py-3 text-gray-600">{{ stock.created_by.username }}</td>
+                        </tr>
+
+                        <!-- Movements -->
+                        {% for movement in stock.movements.all|dictsortreversed:"created_at" %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-3 text-gray-600 font-mono text-xs">{{ movement.created_at|date:"d.m.Y
+                                H:i" }}</td>
+                            <td class="px-6 py-3">
+                                {% if movement.movement_type == 'OUT' %}
+                                <span
+                                    class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-medium border border-red-200">Çıkış</span>
+                                {% else %}
+                                <span
+                                    class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium border border-green-200">Giriş</span>
+                                {% endif %}
+                            </td>
+                            <td
+                                class="px-6 py-3 font-bold {% if movement.movement_type == 'OUT' %}text-red-600{% else %}text-green-600{% endif %}">
+                                {% if movement.movement_type == 'OUT' %}-{% else %}+{% endif %}{{ movement.quantity }}
+                                {{ stock.unit }}
+                            </td>
+                            <td class="px-6 py-3 text-gray-600 text-xs">
+                                {% if movement.project %}<span class="block">Proje: {{ movement.project }}</span>{%
+                                endif %}
+                                {% if movement.receiver %}<span class="block">Alan: {{ movement.receiver }}</span>{%
+                                endif %}
+                            </td>
+                            <td class="px-6 py-3 text-gray-600">{{ movement.performer.username }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>

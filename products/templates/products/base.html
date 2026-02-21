@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Korucu ERP{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2c3e50',
+                        secondary: '#ecf0f1',
+                        accent: '#3498db',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom scrollbar for sidebar */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="bg-gray-100 font-sans text-gray-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar -->
+    <div
+        class="sidebar w-64 bg-primary text-secondary flex flex-col shadow-lg transition-all duration-300 z-20 hidden md:flex shrink-0 h-full">
+        <div class="p-5 text-2xl font-bold text-center border-b border-gray-700">
+            Korucu ERP
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-4 scrollbar-hide">
+            <ul class="space-y-1">
+                <li>
+                    <a href="{% url 'home' %}"
+                        class="flex items-center px-6 py-3 hover:bg-white/10 hover:border-l-4 hover:border-accent transition-all duration-200 {% if request.resolver_match.url_name == 'home' %}bg-white/15 border-l-4 border-accent{% endif %}">
+                        <span class="ml-2">Ana Sayfa</span>
+                    </a>
+                </li>
+
+                <!-- Products Dropdown -->
+                <li>
+                    <button onclick="toggleDropdown('products-menu')"
+                        class="w-full flex justify-between items-center px-6 py-3 text-left hover:bg-white/10 hover:border-l-4 hover:border-accent transition-all duration-200 focus:outline-none">
+                        <span class="ml-2">Ürünler</span>
+                        <svg id="arrow-products-menu" class="w-4 h-4 transform transition-transform duration-200"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+                    <div id="products-menu" class="hidden bg-gray-800/50">
+                        <a href="{% url 'urun_ekle' %}"
+                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Ürün
+                            Ekle</a>
+                        <a href="{% url 'alt_parca' %}"
+                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Alt
+                            Parça Ekle</a>
+                        <a href="{% url 'stok_ekle' %}"
+                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Stok
+                            Takip</a>
+                    </div>
+                </li>
+
+                <!-- Sales Dropdown -->
+                <li>
+                    <button onclick="toggleDropdown('sales-menu')"
+                        class="w-full flex justify-between items-center px-6 py-3 text-left hover:bg-white/10 hover:border-l-4 hover:border-accent transition-all duration-200 focus:outline-none">
+                        <span class="ml-2">Satış</span>
+                        <svg id="arrow-sales-menu" class="w-4 h-4 transform transition-transform duration-200"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+                    <div id="sales-menu" class="hidden bg-gray-800/50">
+                        <a href="{% url 'sales_list' %}"
+                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Teklifler</a>
+                        <a href="{% url 'create_offer' %}"
+                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Yeni
+                            Teklif</a>
+                        <a href="{% url 'customer_list' %}"
+                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Müşteriler</a>
+                    </div>
+                </li>
+
+                <li>
+                    <a href="{% url 'stok_home' %}"
+                        class="flex items-center px-6 py-3 hover:bg-white/10 hover:border-l-4 hover:border-accent transition-all duration-200 {% if request.resolver_match.url_name == 'stok_home' %}bg-white/15 border-l-4 border-accent{% endif %}">
+                        <span class="ml-2">Stok</span>
+                    </a>
+                </li>
+                <!-- Users Dropdown -->
+                <li>
+                    <button onclick="toggleDropdown('users-menu')"
+                        class="w-full flex justify-between items-center px-6 py-3 text-left hover:bg-white/10 hover:border-l-4 hover:border-accent transition-all duration-200 focus:outline-none">
+                        <span class="ml-2">Kullanıcı Yönetimi</span>
+                        <svg id="arrow-users-menu" class="w-4 h-4 transform transition-transform duration-200"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+                    <div id="users-menu" class="hidden bg-gray-800/50">
+                        <a href="{% url 'users:user_list' %}"
+                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Kullanıcılar</a>
+                        <a href="{% url 'users:group_list' %}"
+                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Gruplar</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Mobile Header & Overlay -->
+    <!-- (Optional: Add mobile menu toggle logic here if needed later) -->
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col h-full relative overflow-hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-sm z-10 p-6 flex justify-between items-center shrink-0">
+            <h1 class="text-2xl font-bold text-gray-800">{% block page_title %}Sayfa Başlığı{% endblock %}</h1>
+            <div class="flex items-center gap-4">
+                {% if user.is_authenticated %}
+                <span class="text-gray-600 font-medium">Hoşgeldin, {{ user.username }}</span>
+                <a href="{% url 'logout' %}"
+                    class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded shadow transition-colors duration-200">Çıkış
+                    Yap</a>
+                {% endif %}
+            </div>
+        </header>
+
+        <!-- Scrollable Content Area -->
+        <main class="flex-1 overflow-y-auto p-6 md:p-8">
+            {% if messages %}
+            <div class="mb-6 space-y-2">
+                {% for message in messages %}
+                <div
+                    class="p-4 rounded-md shadow-sm border-l-4 {% if message.tags == 'success' %}bg-green-100 border-green-500 text-green-700{% elif message.tags == 'error' %}bg-red-100 border-red-500 text-red-700{% elif message.tags == 'warning' %}bg-yellow-100 border-yellow-500 text-yellow-700{% else %}bg-blue-100 border-blue-500 text-blue-700{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% block content %}
+            <!-- Content goes here -->
+            {% endblock %}
+        </main>
+    </div>
+
+    <script>
+        function toggleDropdown(id) {
+            var dropdown = document.getElementById(id);
+            var arrow = document.getElementById('arrow-' + id);
+
+            if (dropdown.classList.contains('hidden')) {
+                dropdown.classList.remove('hidden');
+                if (arrow) arrow.classList.add('rotate-180');
+            } else {
+                dropdown.classList.add('hidden');
+                if (arrow) arrow.classList.remove('rotate-180');
+            }
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>
