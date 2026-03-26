@@ -42,10 +42,14 @@ class SalesOffer(models.Model):
     ]
 
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, verbose_name="Müşteri", null=True, blank=True)
+    project_name = models.CharField(max_length=255, verbose_name="Proje Adı", blank=True, null=True)
     description = models.TextField(verbose_name="Açıklama", blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='WAITING', verbose_name="Durum")
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='TL', verbose_name="Para Birimi")
     language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, default='TR', verbose_name="Dil")
+    is_sent = models.BooleanField(default=False, verbose_name="Müşteriye Gönderildi")
+    sent_at = models.DateTimeField(null=True, blank=True, verbose_name="Gönderilme Tarihi")
+    alarm_date = models.DateTimeField(null=True, blank=True, verbose_name="Alarm Tarihi")
     
     # --- Offer Settings Fields ---
     # Company Details
@@ -134,3 +138,17 @@ class SalesOfferItem(models.Model):
     def __str__(self):
         item_name = self.product.material_name if self.product else (self.subpart.material_name if self.subpart else "Bilinmeyen")
         return f"{self.offer.customer.name} - {item_name}"
+
+class OfferProgress(models.Model):
+    offer = models.ForeignKey(SalesOffer, on_delete=models.CASCADE, related_name='progress_updates', verbose_name="Teklif")
+    status_note = models.TextField(verbose_name="Durum Notu")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Tarih")
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name="Ekleyen")
+
+    class Meta:
+        verbose_name = "Teklif İlerleme Durumu"
+        verbose_name_plural = "Teklif İlerleme Durumları"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.offer.offer_number} - {self.created_at.strftime('%d.%m.%Y %H:%M')}"

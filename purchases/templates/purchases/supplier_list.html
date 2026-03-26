@@ -1,0 +1,65 @@
+{% extends 'products/base.html' %}
+
+{% block page_title %}Tedarikçiler{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <div>
+        <h2 class="text-xl font-semibold text-gray-800">Tedarikçi Listesi</h2>
+        <p class="text-sm text-gray-600">Sisteme kayıtlı tüm tedarikçiler</p>
+    </div>
+    <a href="{% url 'purchases:supplier_create' %}"
+        class="bg-accent hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded shadow">
+        <i class="fas fa-plus mr-2"></i>Yeni Tedarikçi Ekle
+    </a>
+</div>
+
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-gray-50 border-b border-gray-200 text-gray-700">
+                    <th class="p-4 font-semibold text-sm">Firma Adı</th>
+                    <th class="p-4 font-semibold text-sm">İletişim Kişisi</th>
+                    <th class="p-4 font-semibold text-sm">Telefon</th>
+                    <th class="p-4 font-semibold text-sm">E-posta</th>
+                    <th class="p-4 font-semibold text-sm">Kayıt Tarihi</th>
+                    <th class="p-4 font-semibold text-sm text-center">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for supplier in suppliers %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="p-4 text-sm text-gray-800 font-medium">{{ supplier.name }}</td>
+                    <td class="p-4 text-sm text-gray-600">{{ supplier.contact_name|default:"-" }}</td>
+                    <td class="p-4 text-sm text-gray-600">{{ supplier.phone|default:"-" }}</td>
+                    <td class="p-4 text-sm text-gray-600">{{ supplier.email|default:"-" }}</td>
+                    <td class="p-4 text-sm text-gray-500">{{ supplier.created_at|date:"d.m.Y H:i" }}</td>
+                    <td class="p-4 text-sm text-center">
+                        <div class="flex items-center justify-center space-x-2">
+                            <a href="{% url 'purchases:supplier_edit' supplier.pk %}"
+                                class="text-blue-600 hover:text-blue-800 transition-colors" title="Düzenle">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'purchases:supplier_delete' supplier.pk %}"
+                                class="text-red-500 hover:text-red-700 transition-colors" title="Sil">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="p-8 text-center text-gray-500">
+                        <div class="flex flex-col items-center justify-center space-y-3">
+                            <i class="fas fa-box-open text-4xl text-gray-300"></i>
+                            <p>Henüz kayıtlı tedarikçi bulunmuyor.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

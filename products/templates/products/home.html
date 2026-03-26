@@ -1,51 +1,181 @@
 {% extends 'products/base.html' %}
 
-{% block title %}Ana Sayfa - Korucu ERP{% endblock %}
+{% block title %}Ana Sayfa — Korucu ERP{% endblock %}
 
 {% block page_title %}Genel Bakış{% endblock %}
+{% block breadcrumb %}Ana Sayfa{% endblock %}
 
 {% block content %}
-<div class="bg-white p-6 rounded-lg shadow-sm">
-    <h3 class="text-xl font-bold mb-2">Hoşgeldiniz!</h3>
-    <p class="text-gray-600 mb-6">Korucu Makina Takip Otomasyonu sistemine başarıyla giriş yaptınız. Sol menüden işlem
-        yapmak istediğiniz sayfayı seçebilirsiniz.</p>
+<div class="space-y-6">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="p-6 bg-gray-50 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
-            <h4 class="font-semibold text-lg mb-4 text-primary">Hızlı İşlemler</h4>
-            <ul class="space-y-2">
-                <li>
-                    <a href="{% url 'urun_ekle' %}"
-                        class="flex items-center text-accent hover:text-blue-700 hover:bg-blue-50 p-2 rounded transition-colors group">
-                        <svg class="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
-                            </path>
-                        </svg>
-                        Yeni Ürün Ekle
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'alt_parca' %}"
-                        class="flex items-center text-accent hover:text-blue-700 hover:bg-blue-50 p-2 rounded transition-colors group">
-                        <svg class="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-                            </path>
-                        </svg>
-                        Alt Parça Tanımla
-                    </a>
-                </li>
-            </ul>
+    <!-- Welcome Banner -->
+    <div
+        class="relative overflow-hidden rounded-xl border border-border-dim bg-gradient-to-br from-surface/80 to-primary p-8">
+        <div
+            class="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4">
         </div>
-        <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
-            <h4 class="font-semibold text-lg mb-4 text-primary">Sistem Durumu</h4>
-            <div class="flex items-center text-green-600 bg-green-50 p-3 rounded border border-green-200">
-                <span class="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                <span>Sistem aktif ve çalışıyor.</span>
+        <div class="relative">
+            <h2 class="text-2xl font-display font-bold text-white tracking-wide mb-2">
+                Hoşgeldin, <span class="text-accent">{{ user.username }}</span>
+            </h2>
+            <p class="text-text-muted text-sm max-w-xl leading-relaxed">
+                Korucu Makina Takip Otomasyonu sistemine başarıyla giriş yaptınız.
+                Sol menüden işlem yapmak istediğiniz modülü seçebilirsiniz.
+            </p>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="tech-card rounded-xl p-5 group">
+            <div class="flex items-center justify-between mb-3">
+                <div
+                    class="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                    <i class="fas fa-cube text-accent text-sm"></i>
+                </div>
+                <span class="text-[10px] font-display text-text-muted/40 tracking-widest uppercase">Üretim</span>
+            </div>
+            <a href="{% url 'urun_ekle' %}" class="block">
+                <span
+                    class="text-sm font-medium text-text-primary group-hover:text-accent transition-colors">Ürünler</span>
+                <span class="block text-xs text-text-muted mt-0.5">Ürün ve parça yönetimi</span>
+            </a>
+        </div>
+
+        <div class="tech-card rounded-xl p-5 group">
+            <div class="flex items-center justify-between mb-3">
+                <div
+                    class="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors">
+                    <i class="fas fa-warehouse text-emerald-400 text-sm"></i>
+                </div>
+                <span class="text-[10px] font-display text-text-muted/40 tracking-widest uppercase">Depo</span>
+            </div>
+            <a href="{% url 'stok_home' %}" class="block">
+                <span
+                    class="text-sm font-medium text-text-primary group-hover:text-emerald-400 transition-colors">Stok</span>
+                <span class="block text-xs text-text-muted mt-0.5">Stok takip ve hareketler</span>
+            </a>
+        </div>
+
+        <div class="tech-card rounded-xl p-5 group">
+            <div class="flex items-center justify-between mb-3">
+                <div
+                    class="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500/20 transition-colors">
+                    <i class="fas fa-file-invoice-dollar text-amber-400 text-sm"></i>
+                </div>
+                <span class="text-[10px] font-display text-text-muted/40 tracking-widest uppercase">Satış</span>
+            </div>
+            <a href="{% url 'sales_list' %}" class="block">
+                <span
+                    class="text-sm font-medium text-text-primary group-hover:text-amber-400 transition-colors">Teklifler</span>
+                <span class="block text-xs text-text-muted mt-0.5">Teklif ve müşteri takibi</span>
+            </a>
+        </div>
+
+        <div class="tech-card rounded-xl p-5 group">
+            <div class="flex items-center justify-between mb-3">
+                <div
+                    class="w-9 h-9 rounded-lg bg-violet-500/10 flex items-center justify-center group-hover:bg-violet-500/20 transition-colors">
+                    <i class="fas fa-shopping-cart text-violet-400 text-sm"></i>
+                </div>
+                <span class="text-[10px] font-display text-text-muted/40 tracking-widest uppercase">Tedarik</span>
+            </div>
+            <a href="{% url 'purchases:request_list' %}" class="block">
+                <span class="text-sm font-medium text-text-primary group-hover:text-violet-400 transition-colors">Satın
+                    Alma</span>
+                <span class="block text-xs text-text-muted mt-0.5">Talepler ve tedarikçiler</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Actions & System Status -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Quick Actions -->
+        <div class="tech-card rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-1 h-5 rounded-full bg-accent"></div>
+                <h3 class="font-display font-semibold text-sm text-white tracking-wide">Hızlı İşlemler</h3>
+            </div>
+            <div class="space-y-1">
+                <a href="{% url 'urun_ekle' %}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted hover:text-accent hover:bg-accent/5 transition-all group">
+                    <div
+                        class="w-7 h-7 rounded-md bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                        <i class="fas fa-plus text-accent text-[10px]"></i>
+                    </div>
+                    <span class="text-sm font-medium">Yeni Ürün Ekle</span>
+                    <i
+                        class="fas fa-chevron-right text-[10px] ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-accent"></i>
+                </a>
+                <a href="{% url 'alt_parca' %}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted hover:text-accent hover:bg-accent/5 transition-all group">
+                    <div
+                        class="w-7 h-7 rounded-md bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                        <i class="fas fa-puzzle-piece text-accent text-[10px]"></i>
+                    </div>
+                    <span class="text-sm font-medium">Alt Parça Tanımla</span>
+                    <i
+                        class="fas fa-chevron-right text-[10px] ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-accent"></i>
+                </a>
+                <a href="{% url 'create_offer' %}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted hover:text-accent hover:bg-accent/5 transition-all group">
+                    <div
+                        class="w-7 h-7 rounded-md bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                        <i class="fas fa-file-circle-plus text-accent text-[10px]"></i>
+                    </div>
+                    <span class="text-sm font-medium">Yeni Teklif Oluştur</span>
+                    <i
+                        class="fas fa-chevron-right text-[10px] ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-accent"></i>
+                </a>
+                <a href="{% url 'stok_ekle' %}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted hover:text-accent hover:bg-accent/5 transition-all group">
+                    <div
+                        class="w-7 h-7 rounded-md bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                        <i class="fas fa-boxes-stacked text-accent text-[10px]"></i>
+                    </div>
+                    <span class="text-sm font-medium">Stok Girişi</span>
+                    <i
+                        class="fas fa-chevron-right text-[10px] ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-accent"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="tech-card rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-1 h-5 rounded-full bg-success"></div>
+                <h3 class="font-display font-semibold text-sm text-white tracking-wide">Sistem Durumu</h3>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between px-4 py-3 rounded-lg bg-surface/50">
+                    <div class="flex items-center gap-3">
+                        <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+                        <span class="text-sm text-text-muted">Veritabanı</span>
+                    </div>
+                    <span class="text-xs font-display text-success tracking-wider">AKTİF</span>
+                </div>
+                <div class="flex items-center justify-between px-4 py-3 rounded-lg bg-surface/50">
+                    <div class="flex items-center gap-3">
+                        <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+                        <span class="text-sm text-text-muted">Uygulama Sunucusu</span>
+                    </div>
+                    <span class="text-xs font-display text-success tracking-wider">AKTİF</span>
+                </div>
+                <div class="flex items-center justify-between px-4 py-3 rounded-lg bg-surface/50">
+                    <div class="flex items-center gap-3">
+                        <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+                        <span class="text-sm text-text-muted">Oturum</span>
+                    </div>
+                    <span class="text-xs font-display text-accent tracking-wider">{{ user.username|upper }}</span>
+                </div>
+            </div>
+            <div class="mt-5 pt-4 border-t border-border-dim">
+                <p class="text-[10px] font-display text-text-muted/40 tracking-widest uppercase">
+                    Django 6.0 · PostgreSQL · Korucu ERP v2.0
+                </p>
             </div>
         </div>
     </div>
+
 </div>
 {% endblock %}

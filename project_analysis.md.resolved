@@ -1,0 +1,225 @@
+# 🏭 KORUCU Makina ERP — Proje Analiz Raporu
+
+**Proje:** KORUCU Makina Takip Otomasyonu (ERP Sistemi)
+**Framework:** Django 6.0 · PostgreSQL · Tailwind CSS
+**Durum:** Aktif geliştirme aşamasında
+
+---
+
+## 📐 Genel Mimari
+
+```mermaid
+graph TD
+    A["korucu_erp (Proje Ayarları)"] --> B["products"]
+    A --> C["sales"]
+    A --> D["stock"]
+    A --> E["users"]
+    A --> F["purchases"]
+    C -->|ForeignKey| B
+    B -->|ForeignKey| D
+    C -->|ForeignKey| D
+    F -->|ForeignKey| E
+```
+
+| Katman | Teknoloji |
+|---|---|
+| Backend | Python 3.12+, Django 6.0 |
+| Veritabanı | PostgreSQL (psycopg2-binary) |
+| Frontend | Tailwind CSS, HTML5, JS |
+| PDF Üretimi | xhtml2pdf |
+| QR Kod | qrcode + Pillow |
+| Prod Sunucu | Waitress |
+| Ortam Değişkenleri | python-dotenv |
+
+---
+
+## 📦 Django Uygulamaları (Apps)
+
+### 1. `products` — Ürün Yönetimi
+**URL Prefix:** `/` (root)
+
+| Model | Açıklama | Alanlar |
+|---|---|---|
+| [Product](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/models.py#25-39) | Ana ürün tanımı | `material_code`, `material_name`, `weight`, `standard`, `country`, `attachment` |
+| [SubPart](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/models.py#41-56) | Alt parça tanımı | `material_code`, `material_name`, `weight`, `quality`, `description`, `quality_doc`, [visual_doc](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/models.py#65-80) |
+| [ProductSubPart](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/models.py#57-80) | Ürün-Alt Parça ilişkisi (M2M) | [product](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/views.py#145-150) → Product, [subpart](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/views.py#269-274) → SubPart, [quantity](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/models.py#40-43) |
+| [SubPartMaterial](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/models.py#82-101) | Alt Parça malzeme reçetesi (BOM) | [subpart](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/views.py#269-274) → SubPart, `stock_item` → StockItem, `unit`, [amount](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/models.py#98-101), ağırlık hesaplamaları, `unit_price` |
+
+**View'lar:** [home](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/views.py#293-296), [urun_ekle](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/views.py#61-144), [delete_product](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/views.py#145-150), [alt_parca](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/views.py#151-268), [delete_subpart](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/views.py#269-274), [user_login](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/views.py#275-288), [user_logout](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/views.py#289-292)
+**Toplam:** 5 template, 296 satır view kodu
+
+> [!NOTE]
+> Login/logout işlemleri `products` uygulamasında tanımlı. Bu, mimari olarak `users` uygulamasına taşınması gereken bir yapı.
+
+---
+
+### 2. [sales](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#146-150) — Satış ve Teklif Yönetimi
+**URL Prefix:** `/satis/`
+
+| Model | Açıklama | Öne Çıkan Alanlar |
+|---|---|---|
+| [Customer](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/models.py#7-24) | Müşteri bilgileri | [name](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/models.py#102-105), `address`, `phone`, `email`, `tax_number`, `country` |
+| [SalesOffer](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/models.py#25-113) | Satış teklifi | [customer](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#160-171), `project_name`, `status` (WAITING/APPROVED/REJECTED), `currency` (TL/USD/EUR/GBP), `language` (TR/EN), `offer_number` (otomatik: KRC-YYYY-NNNN), `revision_number`, `pdf_file`, banka bilgileri |
+| [SalesOfferItem](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/models.py#115-141) | Teklif kalemleri | [offer](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#245-283) → SalesOffer, [product](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/views.py#145-150) → Product, [subpart](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/products/views.py#269-274) → SubPart, [quantity](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/models.py#40-43), `unit_price` |
+| [OfferProgress](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/models.py#142-155) | Teklif ilerleme takibi | [offer](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#245-283) → SalesOffer, `status_note`, `created_by` |
+
+**View'lar:** [sales_list](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#146-150), [create_offer](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#193-244), [edit_offer](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#245-283), [offer_detail](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#284-288), [approve_offer](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#289-304), [reject_offer](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#305-318), [offer_letter](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#330-334), [send_offer](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#34-145), [offer_progress_detail](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#335-349), [add_offer_progress](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#350-367), [set_offer_alarm](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#368-399), [sent_offers_list](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/views.py#321-329), müşteri CRUD işlemleri
+**Toplam:** 8 template, 400 satır view kodu
+
+---
+
+### 3. [stock](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/views.py#181-186) — Stok Yönetimi
+**URL Prefix:** `/` (root, stok/* altında)
+
+| Model | Açıklama | Öne Çıkan Alanlar |
+|---|---|---|
+| [StockItem](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/models.py#6-69) | Stok kalemi | `product_code` (otomatik: STK-timestamp-rand), `product_name`, `quality`, `waybill_no`, `stock_area`, `unit`, [quantity](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/models.py#40-43), `initial_quantity`, `min_stock_level`, `document`, `category` (HAM MADDE/YARI MAMUL/MAMUL/SARF/HIRDAVAT), `unit_weight`, `shelf_basket`, [supplier](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/purchases/views.py#8-12), `lot_no`, `qr_code` |
+| [StockMovement](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/models.py#71-95) | Stok hareketleri | `stock_item`, [quantity](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/models.py#40-43), `movement_type` (IN/OUT), `project`, `receiver`, `performer` |
+
+**View'lar:** [stok_ekle](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/views.py#15-180), [stok_goruntule](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/views.py#196-230), [stok_detay_list](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/views.py#231-298), [stok_cikis](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/views.py#341-371), [stock_detail](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/views.py#189-192), [stok_home](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/views.py#193-195), [delete_stock](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/views.py#181-186), [delete_stock_movement](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/views.py#372-382), [edit_stock_movement](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/views.py#383-405), [update_critical_stock](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/views.py#407-425), [check_stock_code](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/views.py#299-340), [get_stock_movements_modal](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/views.py#427-437)
+**Toplam:** 8 template, 437 satır view kodu
+
+---
+
+### 4. `purchases` — Satın Alma Yönetimi
+**URL Prefix:** `/satin-alma/`
+
+| Model | Açıklama | Öne Çıkan Alanlar |
+|---|---|---|
+| [Supplier](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/purchases/models.py#4-18) | Tedarikçi bilgileri | [name](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/sales/models.py#102-105), `contact_name`, `phone`, `email`, `address` |
+| [PurchaseProcess](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/purchases/models.py#20-42) | Satın alma süreçleri | `title`, `description`, `status` (Bekliyor → Teslim Alındı/İptal), `created_by` |
+| [PurchaseRequest](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/purchases/models.py#44-67) | Satın alma talepleri | `product_name`, [quantity](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/stock/models.py#40-43), `description`, `requested_by`, [supplier](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/purchases/views.py#8-12), [process](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/purchases/views.py#26-30), `status` |
+
+**View'lar:** [supplier_list](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/purchases/views.py#8-12), [supplier_create](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/purchases/views.py#13-24), [process_list](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/purchases/views.py#26-30), [process_create](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/purchases/views.py#31-44), [request_list](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/purchases/views.py#46-50), [request_create](file:///c:/Users/chn_2/Desktop/PROJELER/KORUCU%20Makina%20takip%20otomasyonu/yaz%C4%B1l%C4%B1m/deneme/purchases/views.py#51-64)
+**Toplam:** 6 template, 64 satır view kodu
+
+> [!IMPORTANT]
+> `purchases` modülü henüz erken aşamada — yalnızca listeleme ve oluşturma (CRUD'un C ve R'si) mevcut. Düzenleme ve silme işlemleri eksik.
+
+---
+
+### 5. `users` — Kullanıcı Yönetimi
+**URL Prefix:** `/users/`
+
+**Model:** Django'nun yerleşik `User` ve `Group` modellerini kullanıyor (özel model yok).
+
+**View'lar:** `user_list`, `add_user`, `edit_user`, `delete_user`, `group_list`, `add_group`, `edit_group`, `delete_group`
+**Toplam:** 6 template, 107 satır view kodu
+
+**Erişim kontrolü:** `@login_required` + `@user_passes_test(is_admin)` — sadece admin/staff kullanıcılar erişebilir.
+
+---
+
+## 📊 Proje İstatistikleri
+
+| Metrik | Değer |
+|---|---|
+| Django Uygulaması | 5 |
+| Toplam Model | 12 |
+| Toplam View Fonksiyonu | ~40 |
+| Toplam Template (HTML) | ~33 |
+| Toplam View Kodu | ~1.300 satır |
+| Migration Dosyası | ~41 |
+
+---
+
+## 🗄️ Veritabanı İlişkileri (ER Diyagramı)
+
+```mermaid
+erDiagram
+    Product ||--o{ ProductSubPart : "subparts"
+    SubPart ||--o{ ProductSubPart : ""
+    SubPart ||--o{ SubPartMaterial : "materials"
+    StockItem ||--o{ SubPartMaterial : ""
+    StockItem ||--o{ StockMovement : "movements"
+    Customer ||--o{ SalesOffer : ""
+    SalesOffer ||--o{ SalesOfferItem : "items"
+    SalesOffer ||--o{ OfferProgress : "progress_updates"
+    Product ||--o{ SalesOfferItem : ""
+    SubPart ||--o{ SalesOfferItem : ""
+    Supplier ||--o{ PurchaseRequest : ""
+    PurchaseProcess ||--o{ PurchaseRequest : "requests"
+```
+
+---
+
+## 🔗 URL Haritası
+
+| URL Yolu | View | İşlev |
+|---|---|---|
+| `/` | `home` | Ana sayfa |
+| `/login/` | `user_login` | Giriş |
+| `/logout/` | `user_logout` | Çıkış |
+| `/urun_ekle/` | `urun_ekle` | Ürün ekleme/listeleme |
+| `/alt_parca/` | `alt_parca` | Alt parça yönetimi |
+| `/stok/` | `stok_home` | Stok ana sayfası |
+| `/stok_ekle/` | `stok_ekle` | Stok ekleme |
+| `/stok/goruntule/` | `stok_goruntule` | Stok görüntüleme |
+| `/stok/cikis/` | `stok_cikis` | Stok çıkışı |
+| `/satis/` | `sales_list` | Teklif listesi |
+| `/satis/create/` | `create_offer` | Teklif oluşturma |
+| `/satis/customers/` | `customer_list` | Müşteri listesi |
+| `/users/` | `user_list` | Kullanıcı yönetimi |
+| `/satin-alma/tedarikciler/` | `supplier_list` | Tedarikçiler |
+| `/satin-alma/surecler/` | `process_list` | Satın alma süreçleri |
+| `/satin-alma/talepler/` | `request_list` | Satın alma talepleri |
+
+---
+
+## ⚠️ Tespit Edilen Sorunlar ve İyileştirme Önerileri
+
+### 🔴 Kritik
+1. **Login/Logout `products` uygulamasında** — Kimlik doğrulama mantığı `users` uygulamasına taşınmalı.
+2. **`deneme` adında iç içe klasör** — Proje kök dizini ile aynı adda bir alt dizin var ve içinde proje dosyalarının kopyaları bulunuyor (muhtemelen eski bir yapı).
+3. **`admin.py` dosyaları boş** — Hiçbir model Django Admin'e kayıtlı değil, yönetim panelinden veri yönetimi yapılamıyor.
+
+### 🟡 Orta
+4. **`purchases` modülü eksik** — Düzenleme (`edit`) ve silme (`delete`) view'ları yok.
+5. **Test dosyaları boş** — Tüm `tests.py` dosyaları varsayılan Django boilerplate durumunda, otomatik test yok.
+6. **`LANGUAGE_CODE = 'en-us'`** — Türkçe uygulama için `tr-tr` olmalı.
+7. **`TIME_ZONE = 'UTC'`** — Türkiye için `Europe/Istanbul` olmalı.
+8. **URL yapısı tutarsız** — `products` ve `stock` root seviyede, diğerleri prefix ile ayrılmış.
+
+### 🟢 Düşük
+9. **`xhtml2pdf` requirements.txt'te yok** — `sales` uygulamasında import ediliyor ama bağımlılık listesinde değil.
+10. **`flet`, `customtkinter`, `pymodbus`** — Kullanılmayan bağımlılıklar requirements.txt'te mevcut.
+11. **`MEDIA_ROOT = BASE_DIR`** — Medya dosyaları proje kök dizinine kaydediliyor, ayrı bir `media/` klasörü tercih edilmeli.
+12. **Bazı redirect'lerde namespace eksik** — Örneğin `users` view'larında `redirect('user_list')` yerine `redirect('users:user_list')` kullanılmalı.
+
+---
+
+## 📁 Dosya Yapısı Özeti
+
+```
+deneme/                          ← Proje kök dizini
+├── korucu_erp/                  ← Django proje ayarları
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py / asgi.py
+├── products/                    ← Ürün yönetimi
+│   ├── models.py (4 model)
+│   ├── views.py (296 satır)
+│   ├── urls.py, templates/
+├── sales/                       ← Satış & teklif
+│   ├── models.py (4 model)
+│   ├── views.py (400 satır)
+│   ├── forms.py, urls.py, templates/
+├── stock/                       ← Stok yönetimi
+│   ├── models.py (2 model)
+│   ├── views.py (437 satır)
+│   ├── urls.py, templates/
+├── purchases/                   ← Satın alma (yeni)
+│   ├── models.py (3 model)
+│   ├── views.py (64 satır)
+│   ├── forms.py, urls.py, templates/
+├── users/                       ← Kullanıcı yönetimi
+│   ├── views.py (107 satır)
+│   ├── forms.py, urls.py, templates/
+├── static/css/, static/fonts/
+├── manage.py
+├── requirements.txt
+├── .env
+├── backup_db.py
+├── run_production.py
+└── README.md
+```

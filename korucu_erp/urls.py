@@ -26,7 +26,7 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('satis/', include('sales.urls')),
     path('', include('stock.urls')),
-
+    path('satin-alma/', include('purchases.urls')),
 ]
 
 if settings.DEBUG:

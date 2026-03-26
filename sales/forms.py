@@ -6,7 +6,7 @@ class SalesOfferForm(forms.ModelForm):
     class Meta:
         model = SalesOffer
         fields = [
-            'customer', 'currency', 'language', 'description',
+            'customer', 'project_name', 'currency', 'language', 'description',
             'company_name', 'company_address', 'company_tax_office', 'company_tax_number',
             'offer_date', 'delivery_place', 'delivery_date', 'validity_date', 'advance_payment',
             'terms', 'notes', 'payment_method',
@@ -14,6 +14,7 @@ class SalesOfferForm(forms.ModelForm):
         ]
         widgets = {
             'customer': forms.Select(attrs={'class': 'w-full bg-gray-100 border border-gray-400 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block p-2.5', 'placeholder': 'Müşteri Seçiniz'}),
+            'project_name': forms.TextInput(attrs={'class': 'w-full bg-gray-100 border border-gray-400 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block p-2.5', 'placeholder': 'Proje Adı (Zorunlu Değil)'}),
             'currency': forms.Select(attrs={'class': 'w-full bg-gray-100 border border-gray-400 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block p-2.5'}),
             'language': forms.Select(attrs={'class': 'w-full bg-gray-100 border border-gray-400 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block p-2.5'}),
             'description': forms.Textarea(attrs={'class': 'w-full bg-gray-100 border border-gray-400 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block p-2.5', 'rows': 3, 'placeholder': 'Açıklama (Opsiyonel)'}),

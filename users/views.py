@@ -56,7 +56,7 @@ def delete_user(request, pk):
         username = user.username
         user.delete()
         messages.success(request, f'Kullanıcı {username} silindi.')
-        return redirect('user_list')
+        return redirect('users:user_list')
     return render(request, 'users/confirm_delete.html', {'object': user, 'type': 'Kullanıcı'})
 
 # --- Group Views ---
@@ -102,5 +102,5 @@ def delete_group(request, pk):
         name = group.name
         group.delete()
         messages.success(request, f'Grup {name} silindi.')
-        return redirect('group_list')
+        return redirect('users:group_list')
     return render(request, 'users/confirm_delete.html', {'object': group, 'type': 'Grup'})

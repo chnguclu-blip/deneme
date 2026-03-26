@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 
 <head>
     <meta charset="UTF-8">
@@ -11,171 +11,618 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#2c3e50',
-                        secondary: '#ecf0f1',
-                        accent: '#3498db',
+                        primary: '#0a0e1a',
+                        'primary-light': '#111827',
+                        secondary: '#1e293b',
+                        accent: '#06b6d4',
+                        'accent-glow': '#22d3ee',
+                        surface: '#0f172a',
+                        'surface-light': '#1e293b',
+                        'text-primary': '#e2e8f0',
+                        'text-muted': '#94a3b8',
+                        'border-dim': '#1e293b',
+                        'border-accent': '#164e63',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    },
+                    fontFamily: {
+                        display: ['JetBrains Mono', 'monospace'],
+                        body: ['DM Sans', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glow': '0 0 15px rgba(6, 182, 212, 0.15)',
+                        'glow-lg': '0 0 30px rgba(6, 182, 212, 0.2)',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-in': 'slideIn 0.3s ease-out',
+                        'glow-pulse': 'glowPulse 2s ease-in-out infinite',
                     }
                 }
             }
         }
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* Custom scrollbar for sidebar */
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #1e293b #0a0e1a;
         }
 
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0e1a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 5px rgba(6, 182, 212, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+            }
+        }
+
+        .sidebar-bg {
+            background: linear-gradient(180deg, #0a0e1a 0%, #0f172a 50%, #0a0e1a 100%);
+            border-right: 1px solid rgba(6, 182, 212, 0.1);
+        }
+
+        .nav-item {
+            position: relative;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: #06b6d4;
+            transform: scaleY(0);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-item:hover::before,
+        .nav-item.active::before {
+            transform: scaleY(1);
+        }
+
+        .nav-item:hover {
+            background: rgba(6, 182, 212, 0.06);
+        }
+
+        .nav-item.active {
+            background: rgba(6, 182, 212, 0.08);
+        }
+
+        .submenu-item {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .submenu-item::before {
+            content: '';
+            position: absolute;
+            left: 2.5rem;
+            top: 50%;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #334155;
+            transform: translateY(-50%);
+            transition: all 0.2s ease;
+        }
+
+        .submenu-item:hover::before {
+            background: #06b6d4;
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
+        }
+
+        .submenu-item:hover {
+            color: #22d3ee;
+            padding-left: 3.75rem;
+        }
+
+        .tech-header {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(6, 182, 212, 0.08);
+        }
+
+        .grid-bg {
+            background-image:
+                linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .tech-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(30, 41, 59, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tech-card:hover {
+            border-color: rgba(6, 182, 212, 0.3);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.08);
+            transform: translateY(-1px);
+        }
+
+        table thead tr {
+            background: rgba(6, 182, 212, 0.05) !important;
+            border-bottom: 1px solid rgba(6, 182, 212, 0.1) !important;
+        }
+
+        table thead th {
+            color: #94a3b8 !important;
+            font-family: 'JetBrains Mono', monospace !important;
+            font-size: 0.7rem !important;
+            letter-spacing: 0.08em !important;
+            text-transform: uppercase !important;
+            padding: 0.875rem 1rem !important;
+        }
+
+        table tbody tr {
+            border-bottom: 1px solid rgba(30, 41, 59, 0.5) !important;
+            transition: all 0.2s ease !important;
+        }
+
+        table tbody tr:hover {
+            background: rgba(6, 182, 212, 0.04) !important;
+        }
+
+        table tbody td {
+            color: #cbd5e1 !important;
+            padding: 0.875rem 1rem !important;
+            font-size: 0.875rem !important;
+        }
+
+        .bg-white {
+            background: rgba(15, 23, 42, 0.6) !important;
+            backdrop-filter: blur(10px);
+        }
+
+        .bg-gray-50 {
+            background: rgba(30, 41, 59, 0.5) !important;
+        }
+
+        .text-gray-800 {
+            color: #e2e8f0 !important;
+        }
+
+        .text-gray-700 {
+            color: #cbd5e1 !important;
+        }
+
+        .text-gray-600 {
+            color: #94a3b8 !important;
+        }
+
+        .text-gray-500 {
+            color: #64748b !important;
+        }
+
+        .border-gray-200 {
+            border-color: rgba(30, 41, 59, 0.8) !important;
+        }
+
+        .border-gray-100 {
+            border-color: rgba(30, 41, 59, 0.5) !important;
+        }
+
+        .border-gray-300 {
+            border-color: rgba(51, 65, 85, 0.6) !important;
+        }
+
+        .shadow-sm {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .divide-gray-200>*+* {
+            border-color: rgba(30, 41, 59, 0.5) !important;
+        }
+
+        input,
+        select,
+        textarea {
+            background: rgba(15, 23, 42, 0.8) !important;
+            border-color: rgba(51, 65, 85, 0.6) !important;
+            color: #e2e8f0 !important;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #06b6d4 !important;
+            box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.15) !important;
+            outline: none !important;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #475569 !important;
+        }
+
+        label {
+            color: #94a3b8 !important;
+        }
+
+        .bg-yellow-100 {
+            background: rgba(245, 158, 11, 0.15) !important;
+        }
+
+        .text-yellow-800 {
+            color: #fbbf24 !important;
+        }
+
+        .bg-green-100 {
+            background: rgba(16, 185, 129, 0.15) !important;
+        }
+
+        .text-green-800 {
+            color: #34d399 !important;
+        }
+
+        .bg-red-100 {
+            background: rgba(239, 68, 68, 0.15) !important;
+        }
+
+        .text-red-800 {
+            color: #f87171 !important;
+        }
+
+        .bg-blue-100 {
+            background: rgba(6, 182, 212, 0.15) !important;
+        }
+
+        .text-blue-800 {
+            color: #22d3ee !important;
+        }
+
+        .bg-green-100.border-green-500 {
+            background: rgba(16, 185, 129, 0.1) !important;
+            border-color: #10b981 !important;
+        }
+
+        .text-green-700 {
+            color: #34d399 !important;
+        }
+
+        .bg-red-100.border-red-500 {
+            background: rgba(239, 68, 68, 0.1) !important;
+            border-color: #ef4444 !important;
+        }
+
+        .text-red-700 {
+            color: #f87171 !important;
+        }
+
+        .bg-yellow-100.border-yellow-500 {
+            background: rgba(245, 158, 11, 0.1) !important;
+            border-color: #f59e0b !important;
+        }
+
+        .text-yellow-700 {
+            color: #fbbf24 !important;
+        }
+
+        .bg-blue-100.border-blue-500 {
+            background: rgba(6, 182, 212, 0.1) !important;
+            border-color: #06b6d4 !important;
+        }
+
+        .text-blue-700 {
+            color: #22d3ee !important;
+        }
+
+        .loading-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            z-index: 100;
+            background: linear-gradient(90deg, transparent, #06b6d4, #22d3ee, transparent);
+            animation: loadSlide 1.5s ease-in-out;
+            opacity: 0;
+        }
+
+        @keyframes loadSlide {
+            0% {
+                opacity: 1;
+                transform: translateX(-100%);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateX(100%);
+            }
         }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
 
-<body class="bg-gray-100 font-sans text-gray-800 h-screen flex overflow-hidden">
+<body class="font-body bg-primary text-text-primary h-screen flex overflow-hidden">
 
-    <!-- Sidebar -->
-    <div
-        class="sidebar w-64 bg-primary text-secondary flex flex-col shadow-lg transition-all duration-300 z-20 hidden md:flex shrink-0 h-full">
-        <div class="p-5 text-2xl font-bold text-center border-b border-gray-700">
-            Korucu ERP
+    <div class="loading-bar"></div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar-bg w-72 flex flex-col shadow-lg z-20 hidden md:flex shrink-0 h-full relative">
+        <div class="px-6 py-5 flex items-center gap-3 border-b border-border-dim">
+            <div
+                class="w-9 h-9 rounded-lg bg-gradient-to-br from-accent to-cyan-600 flex items-center justify-center shadow-glow animate-glow-pulse">
+                <span class="font-display font-bold text-sm text-white">K</span>
+            </div>
+            <div>
+                <span class="font-display font-bold text-base text-white tracking-wider">KORUCU</span>
+                <span class="block text-[10px] font-display text-text-muted tracking-[0.2em] uppercase -mt-0.5">ERP
+                    SİSTEMİ</span>
+            </div>
         </div>
 
-        <nav class="flex-1 overflow-y-auto py-4 scrollbar-hide">
-            <ul class="space-y-1">
-                <li>
-                    <a href="{% url 'home' %}"
-                        class="flex items-center px-6 py-3 hover:bg-white/10 hover:border-l-4 hover:border-accent transition-all duration-200 {% if request.resolver_match.url_name == 'home' %}bg-white/15 border-l-4 border-accent{% endif %}">
-                        <span class="ml-2">Ana Sayfa</span>
-                    </a>
-                </li>
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <a href="{% url 'home' %}"
+                class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:text-white group {% if request.resolver_match.url_name == 'home' %}active text-white{% endif %}">
+                <i
+                    class="fas fa-th-large w-5 text-center text-xs opacity-60 group-hover:opacity-100 group-hover:text-accent transition-all"></i>
+                <span>Ana Sayfa</span>
+            </a>
 
-                <!-- Products Dropdown -->
-                <li>
-                    <button onclick="toggleDropdown('products-menu')"
-                        class="w-full flex justify-between items-center px-6 py-3 text-left hover:bg-white/10 hover:border-l-4 hover:border-accent transition-all duration-200 focus:outline-none">
-                        <span class="ml-2">Ürünler</span>
-                        <svg id="arrow-products-menu" class="w-4 h-4 transform transition-transform duration-200"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                            </path>
-                        </svg>
-                    </button>
-                    <div id="products-menu" class="hidden bg-gray-800/50">
-                        <a href="{% url 'urun_ekle' %}"
-                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Ürün
-                            Ekle</a>
-                        <a href="{% url 'alt_parca' %}"
-                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Alt
-                            Parça Ekle</a>
-                        <a href="{% url 'stok_ekle' %}"
-                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Stok
-                            Takip</a>
-                    </div>
-                </li>
+            <div class="pt-3"><span
+                    class="px-4 text-[10px] font-display font-semibold text-text-muted/50 tracking-[0.15em] uppercase">Üretim</span>
+            </div>
+            <button onclick="toggleDropdown('products-menu')"
+                class="nav-item w-full flex justify-between items-center px-4 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:text-white group">
+                <span class="flex items-center gap-3">
+                    <i
+                        class="fas fa-cube w-5 text-center text-xs opacity-60 group-hover:opacity-100 group-hover:text-accent transition-all"></i>
+                    <span>Ürünler</span>
+                </span>
+                <svg id="arrow-products-menu" class="w-3.5 h-3.5 transform transition-transform duration-300 opacity-40"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div id="products-menu" class="hidden ml-2 space-y-0.5">
+                <a href="{% url 'urun_ekle' %}"
+                    class="submenu-item block pl-14 pr-4 py-2 text-sm text-text-muted/70 hover:text-accent-glow transition-all">Ürün
+                    Ekle</a>
+                <a href="{% url 'alt_parca' %}"
+                    class="submenu-item block pl-14 pr-4 py-2 text-sm text-text-muted/70 hover:text-accent-glow transition-all">Alt
+                    Parça Ekle</a>
+                <a href="{% url 'stok_ekle' %}"
+                    class="submenu-item block pl-14 pr-4 py-2 text-sm text-text-muted/70 hover:text-accent-glow transition-all">Stok
+                    Takip</a>
+            </div>
 
-                <!-- Sales Dropdown -->
-                <li>
-                    <button onclick="toggleDropdown('sales-menu')"
-                        class="w-full flex justify-between items-center px-6 py-3 text-left hover:bg-white/10 hover:border-l-4 hover:border-accent transition-all duration-200 focus:outline-none">
-                        <span class="ml-2">Satış</span>
-                        <svg id="arrow-sales-menu" class="w-4 h-4 transform transition-transform duration-200"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                            </path>
-                        </svg>
-                    </button>
-                    <div id="sales-menu" class="hidden bg-gray-800/50">
-                        <a href="{% url 'sales_list' %}"
-                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Teklifler</a>
-                        <a href="{% url 'create_offer' %}"
-                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Yeni
-                            Teklif</a>
-                        <a href="{% url 'customer_list' %}"
-                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Müşteriler</a>
-                    </div>
-                </li>
+            <div class="pt-3"><span
+                    class="px-4 text-[10px] font-display font-semibold text-text-muted/50 tracking-[0.15em] uppercase">Satış</span>
+            </div>
+            <button onclick="toggleDropdown('sales-menu')"
+                class="nav-item w-full flex justify-between items-center px-4 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:text-white group">
+                <span class="flex items-center gap-3">
+                    <i
+                        class="fas fa-file-invoice-dollar w-5 text-center text-xs opacity-60 group-hover:opacity-100 group-hover:text-accent transition-all"></i>
+                    <span>Teklifler</span>
+                </span>
+                <svg id="arrow-sales-menu" class="w-3.5 h-3.5 transform transition-transform duration-300 opacity-40"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div id="sales-menu" class="hidden ml-2 space-y-0.5">
+                <a href="{% url 'sales_list' %}"
+                    class="submenu-item block pl-14 pr-4 py-2 text-sm text-text-muted/70 hover:text-accent-glow transition-all">Tüm
+                    Teklifler</a>
+                <a href="{% url 'sent_offers_list' %}"
+                    class="submenu-item block pl-14 pr-4 py-2 text-sm text-text-muted/70 hover:text-accent-glow transition-all">Gönderilen
+                    Teklifler</a>
+                <a href="{% url 'create_offer' %}"
+                    class="submenu-item block pl-14 pr-4 py-2 text-sm text-text-muted/70 hover:text-accent-glow transition-all">Yeni
+                    Teklif</a>
+                <a href="{% url 'customer_list' %}"
+                    class="submenu-item block pl-14 pr-4 py-2 text-sm text-text-muted/70 hover:text-accent-glow transition-all">Müşteriler</a>
+            </div>
 
-                <li>
-                    <a href="{% url 'stok_home' %}"
-                        class="flex items-center px-6 py-3 hover:bg-white/10 hover:border-l-4 hover:border-accent transition-all duration-200 {% if request.resolver_match.url_name == 'stok_home' %}bg-white/15 border-l-4 border-accent{% endif %}">
-                        <span class="ml-2">Stok</span>
-                    </a>
-                </li>
-                <!-- Users Dropdown -->
-                <li>
-                    <button onclick="toggleDropdown('users-menu')"
-                        class="w-full flex justify-between items-center px-6 py-3 text-left hover:bg-white/10 hover:border-l-4 hover:border-accent transition-all duration-200 focus:outline-none">
-                        <span class="ml-2">Kullanıcı Yönetimi</span>
-                        <svg id="arrow-users-menu" class="w-4 h-4 transform transition-transform duration-200"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                            </path>
-                        </svg>
-                    </button>
-                    <div id="users-menu" class="hidden bg-gray-800/50">
-                        <a href="{% url 'users:user_list' %}"
-                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Kullanıcılar</a>
-                        <a href="{% url 'users:group_list' %}"
-                            class="block pl-12 pr-6 py-2 text-sm hover:bg-white/5 hover:text-white transition-colors">Gruplar</a>
-                    </div>
-                </li>
-            </ul>
+            <div class="pt-3"><span
+                    class="px-4 text-[10px] font-display font-semibold text-text-muted/50 tracking-[0.15em] uppercase">Tedarik</span>
+            </div>
+            <button onclick="toggleDropdown('purchases-menu')"
+                class="nav-item w-full flex justify-between items-center px-4 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:text-white group">
+                <span class="flex items-center gap-3">
+                    <i
+                        class="fas fa-shopping-cart w-5 text-center text-xs opacity-60 group-hover:opacity-100 group-hover:text-accent transition-all"></i>
+                    <span>Satın Alma</span>
+                </span>
+                <svg id="arrow-purchases-menu"
+                    class="w-3.5 h-3.5 transform transition-transform duration-300 opacity-40" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div id="purchases-menu" class="hidden ml-2 space-y-0.5">
+                <a href="{% url 'purchases:request_list' %}"
+                    class="submenu-item block pl-14 pr-4 py-2 text-sm text-text-muted/70 hover:text-accent-glow transition-all">Talepler</a>
+                <a href="{% url 'purchases:process_list' %}"
+                    class="submenu-item block pl-14 pr-4 py-2 text-sm text-text-muted/70 hover:text-accent-glow transition-all">Süreçler</a>
+                <a href="{% url 'purchases:supplier_list' %}"
+                    class="submenu-item block pl-14 pr-4 py-2 text-sm text-text-muted/70 hover:text-accent-glow transition-all">Tedarikçiler</a>
+            </div>
+
+            <a href="{% url 'stok_home' %}"
+                class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:text-white group {% if request.resolver_match.url_name == 'stok_home' %}active text-white{% endif %}">
+                <i
+                    class="fas fa-warehouse w-5 text-center text-xs opacity-60 group-hover:opacity-100 group-hover:text-accent transition-all"></i>
+                <span>Stok</span>
+            </a>
+
+            <div class="pt-3"><span
+                    class="px-4 text-[10px] font-display font-semibold text-text-muted/50 tracking-[0.15em] uppercase">Sistem</span>
+            </div>
+            <button onclick="toggleDropdown('users-menu')"
+                class="nav-item w-full flex justify-between items-center px-4 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:text-white group">
+                <span class="flex items-center gap-3">
+                    <i
+                        class="fas fa-users-gear w-5 text-center text-xs opacity-60 group-hover:opacity-100 group-hover:text-accent transition-all"></i>
+                    <span>Kullanıcı Yönetimi</span>
+                </span>
+                <svg id="arrow-users-menu" class="w-3.5 h-3.5 transform transition-transform duration-300 opacity-40"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div id="users-menu" class="hidden ml-2 space-y-0.5">
+                <a href="{% url 'users:user_list' %}"
+                    class="submenu-item block pl-14 pr-4 py-2 text-sm text-text-muted/70 hover:text-accent-glow transition-all">Kullanıcılar</a>
+                <a href="{% url 'users:group_list' %}"
+                    class="submenu-item block pl-14 pr-4 py-2 text-sm text-text-muted/70 hover:text-accent-glow transition-all">Gruplar</a>
+            </div>
         </nav>
+
+        <div class="px-5 py-4 border-t border-border-dim">
+            <div class="flex items-center gap-2 text-[10px] font-display text-text-muted/40 tracking-widest uppercase">
+                <span class="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></span>
+                <span>Sistem Aktif</span>
+            </div>
+        </div>
     </div>
 
-    <!-- Mobile Header & Overlay -->
-    <!-- (Optional: Add mobile menu toggle logic here if needed later) -->
-
-    <!-- Main Content -->
+    <!-- MAIN CONTENT -->
     <div class="flex-1 flex flex-col h-full relative overflow-hidden">
-        <!-- Header -->
-        <header class="bg-white shadow-sm z-10 p-6 flex justify-between items-center shrink-0">
-            <h1 class="text-2xl font-bold text-gray-800">{% block page_title %}Sayfa Başlığı{% endblock %}</h1>
+        <header class="tech-header z-10 px-8 py-4 flex justify-between items-center shrink-0">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleMobileMenu()"
+                    class="md:hidden text-text-muted hover:text-accent transition-colors">
+                    <i class="fas fa-bars text-lg"></i>
+                </button>
+                <div>
+                    <h1 class="text-xl font-display font-semibold text-white tracking-wide">{% block page_title %}Sayfa Başlığı{% endblock %}</h1>
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <span class="text-[10px] font-display text-text-muted/40 tracking-widest uppercase">Korucu ERP</span>
+                        <span class="text-text-muted/20">›</span>
+                        <span class="text-[10px] font-display text-accent/60 tracking-widest uppercase">{% block breadcrumb %}Panel{% endblock %}</span>
+                    </div>
+                </div>
+            </div>
             <div class="flex items-center gap-4">
                 {% if user.is_authenticated %}
-                <span class="text-gray-600 font-medium">Hoşgeldin, {{ user.username }}</span>
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-gradient-to-br from-secondary to-surface flex items-center justify-center border border-border-dim">
+                        <span class="text-xs font-display font-bold text-accent">{{ user.username|first|upper }}</span>
+                    </div>
+                    <div class="hidden sm:block">
+                        <span class="text-sm font-medium text-text-primary">{{ user.username }}</span>
+                        <span class="block text-[10px] text-text-muted/50 font-display tracking-wider uppercase">{% if user.is_superuser %}Admin{% else %}Kullanıcı{% endif %}</span>
+                    </div>
+                </div>
+                <div class="w-px h-8 bg-border-dim"></div>
                 <a href="{% url 'logout' %}"
-                    class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded shadow transition-colors duration-200">Çıkış
-                    Yap</a>
+                    class="flex items-center gap-2 px-3 py-1.5 text-sm text-text-muted hover:text-danger border border-transparent hover:border-danger/20 hover:bg-danger/5 rounded-lg transition-all duration-200"
+                    title="Çıkış Yap">
+                    <i class="fas fa-arrow-right-from-bracket text-xs"></i>
+                    <span class="hidden sm:inline">Çıkış</span>
+                </a>
                 {% endif %}
             </div>
         </header>
 
-        <!-- Scrollable Content Area -->
-        <main class="flex-1 overflow-y-auto p-6 md:p-8">
+        <main class="flex-1 overflow-y-auto p-6 md:p-8 grid-bg animate-fade-in">
             {% if messages %}
             <div class="mb-6 space-y-2">
                 {% for message in messages %}
                 <div
-                    class="p-4 rounded-md shadow-sm border-l-4 {% if message.tags == 'success' %}bg-green-100 border-green-500 text-green-700{% elif message.tags == 'error' %}bg-red-100 border-red-500 text-red-700{% elif message.tags == 'warning' %}bg-yellow-100 border-yellow-500 text-yellow-700{% else %}bg-blue-100 border-blue-500 text-blue-700{% endif %}">
-                    {{ message }}
+                    class="p-4 rounded-lg border-l-4 backdrop-blur-sm animate-slide-in {% if message.tags == 'success' %}bg-success/10 border-success text-success{% elif message.tags == 'error' %}bg-danger/10 border-danger text-danger{% elif message.tags == 'warning' %}bg-warning/10 border-warning text-warning{% else %}bg-accent/10 border-accent text-accent{% endif %}">
+                    <div class="flex items-center gap-2">
+                        <i
+                            class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %} text-sm"></i>
+                        <span class="text-sm font-medium">{{ message }}</span>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
             {% endif %}
-
-            {% block content %}
-            <!-- Content goes here -->
-            {% endblock %}
+            {% block content %}{% endblock %}
         </main>
     </div>
 
     <script>
         function toggleDropdown(id) {
-            var dropdown = document.getElementById(id);
-            var arrow = document.getElementById('arrow-' + id);
-
-            if (dropdown.classList.contains('hidden')) {
-                dropdown.classList.remove('hidden');
-                if (arrow) arrow.classList.add('rotate-180');
-            } else {
-                dropdown.classList.add('hidden');
-                if (arrow) arrow.classList.remove('rotate-180');
-            }
+            const dropdown = document.getElementById(id);
+            const arrow = document.getElementById('arrow-' + id);
+            const isHidden = dropdown.classList.contains('hidden');
+            dropdown.classList.toggle('hidden');
+            if (arrow) arrow.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
         }
+
+        function toggleMobileMenu() {
+            const overlay = document.getElementById('mobile-overlay');
+            if (overlay) overlay.classList.toggle('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.submenu-item').forEach(function (item) {
+                if (item.href && item.href.includes(currentPath) && currentPath !== '/') {
+                    const parent = item.closest('[id]');
+                    if (parent) {
+                        parent.classList.remove('hidden');
+                        const arrow = document.getElementById('arrow-' + parent.id);
+                        if (arrow) arrow.style.transform = 'rotate(180deg)';
+                    }
+                    item.classList.add('text-accent');
+                }
+            });
+        });
     </script>
     {% block extra_js %}{% endblock %}
 </body>

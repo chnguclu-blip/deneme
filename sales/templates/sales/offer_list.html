@@ -3,11 +3,24 @@
 {% block content %}
 <div class="container mx-auto px-4 py-6">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Satış Teklifleri</h1>
-        <a href="{% url 'create_offer' %}"
-            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow transition duration-300 ease-in-out">
-            <i class="fas fa-plus mr-2"></i> Yeni Teklif Oluştur
-        </a>
+        <div class="flex items-center">
+            <a href="javascript:history.back()"
+                class="mr-4 flex items-center justify-center w-10 h-10 rounded-full bg-white border border-gray-300 text-gray-600 hover:text-blue-600 hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 shadow-sm"
+                title="Geri">
+                <i class="fas fa-arrow-left cursor-pointer text-lg"></i>
+            </a>
+            <h1 class="text-2xl font-bold text-gray-800">Satış Teklifleri</h1>
+        </div>
+        <div class="flex space-x-3">
+            <a href="{% url 'sent_offers_list' %}"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded shadow transition duration-300 ease-in-out">
+                <i class="fas fa-paper-plane mr-2"></i> Gönderilen Teklifler
+            </a>
+            <a href="{% url 'create_offer' %}"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow transition duration-300 ease-in-out">
+                <i class="fas fa-plus mr-2"></i> Yeni Teklif Oluştur
+            </a>
+        </div>
     </div>
 
     <div class="bg-white shadow-md rounded my-6 overflow-x-auto">
